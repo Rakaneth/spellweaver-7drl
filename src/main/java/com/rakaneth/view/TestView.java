@@ -31,7 +31,7 @@ public class TestView extends GameView {
             case KeyEvent.VK_S -> player.moveDir(Direction.DOWN);
             case KeyEvent.VK_A -> player.moveDir(Direction.LEFT);
             case KeyEvent.VK_D -> player.moveDir(Direction.RIGHT);
-            default -> logger.info("Unhandled key: {}", key.getKeyChar());
+            default -> logger.info("Unhandled key: {} ({})", key.getKeyChar(), key.getKeyCode());
         }
     }
 
