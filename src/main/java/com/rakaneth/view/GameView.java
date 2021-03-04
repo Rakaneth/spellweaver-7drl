@@ -11,5 +11,5 @@ public abstract class GameView {
     }
 
     abstract void render(VPanel panel);
-    abstract boolean handle(KeyEvent key);
+    abstract void handle(KeyEvent key);
 }

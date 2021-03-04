@@ -24,7 +24,7 @@ public class TestView extends GameView {
     }
 
     @Override
-    public boolean handle(KeyEvent key) {
+    public void handle(KeyEvent key) {
         final var player = gameState.getPlayer();
         switch (key.getKeyCode()) {
             case KeyEvent.VK_W -> player.moveDir(Direction.UP);
@@ -33,7 +33,6 @@ public class TestView extends GameView {
             case KeyEvent.VK_D -> player.moveDir(Direction.RIGHT);
             default -> logger.info("Unhandled key: {}", key.getKeyChar());
         }
-        return false;
     }
 
     private int[][] randomCodePoints(VPanel panel) {
