@@ -3,6 +3,7 @@ package com.rakaneth;
 import com.rakaneth.engine.GameState;
 import com.rakaneth.map.MapBuilder;
 import com.rakaneth.view.KeyPressedListener;
+import com.rakaneth.view.PlayView;
 import com.rakaneth.view.TestView;
 import com.rakaneth.view.UIStack;
 import com.valkryst.VTerminal.component.VFrame;
@@ -31,7 +32,7 @@ public class Main {
         } catch (final UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-        final var frame = new JFrame("Vterminal Test");
+        final var frame = new JFrame("Spellweaver");
         final var panel = new VPanel(GAME_W, GAME_H);
         final var stack = UIStack.getInstance();
 
@@ -47,21 +48,12 @@ public class Main {
                 stack.handle(e);
                 SwingUtilities.invokeLater(() -> {
                     stack.render(panel);
-                    panel.repaint();
                 });
             }
         });
-        final var state = new GameState();
-        final var gmap = new MapBuilder(75, 50, state.getMapRNG())
-                .withCarvers(2, 0, 0)
-                .withWaterPct(25)
-                .withDoorPct(15)
-                .withDoubleDoors(true)
-                .withId("test")
-                .withName("Test")
-                .build();
+        final var state = GameConfig.newGame();
         
-        stack.push(new TestView(state));
+        stack.push(new PlayView(state));
 
         SwingUtilities.invokeLater(() -> {
             stack.render(panel);

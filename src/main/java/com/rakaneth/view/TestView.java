@@ -20,7 +20,7 @@ public class TestView extends GameView {
     @Override
     public void render(VPanel panel) {
         final var playerPos = gameState.getPlayer().getPos();
-        final var playerGlyph = gameState.getPlayer().getGlyph();
+        final var playerGlyph = gameState.getPlayer().glyph;
         panel.setCodePointAt(playerPos.x, playerPos.y, playerGlyph);
     }
 

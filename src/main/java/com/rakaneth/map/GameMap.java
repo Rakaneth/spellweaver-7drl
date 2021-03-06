@@ -6,13 +6,21 @@ import squidpony.squidmath.GreasedRegion;
 import squidpony.squidmath.IRNG;
 import squidpony.squidmath.MathExtras;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class GameMap {
+
+    public static class Connection {
+        public final Coord dest;
+        public final String mapId;
+
+        public Connection(Coord dest, String mapId) {
+            this.dest = dest;
+            this.mapId = mapId;
+        }
+    }
+
     boolean lit;
     char[][] tiles;
     GreasedRegion floors;
@@ -21,19 +29,18 @@ public class GameMap {
     String name;
     double[][] resistances;
     final private IRNG rng;
-    final private Map<Coord, List<Entity>> entities = new HashMap<>();
-    final private Map<Coord, String> connections = new HashMap<>();
+    final private Map<Coord, Connection> connections = new HashMap<>();
 
     GameMap(IRNG rng) {
         this.rng = rng;
     }
 
     //Getters
-    public char getTile(int x, int y) {
-        return inBounds(x, y) ? tiles[x][y] : '\0';
+    public Optional<Character> getTile(int x, int y) {
+        return inBounds(x, y) ? Optional.of(tiles[x][y]) : Optional.empty();
     }
 
-    public char getTile(Coord c) {
+    public Optional<Character> getTile(Coord c) {
         return getTile(c.x, c.y);
     }
 
@@ -57,6 +64,8 @@ public class GameMap {
         return id;
     }
 
+    public Connection getConnection(Coord c) { return connections.get(c); }
+
     //Mutators
     public void setTile(int x, int y, char t) {
         tiles[x][y] = t;
@@ -66,23 +75,9 @@ public class GameMap {
         setTile(c.x, c.y, t);
     }
 
-    public void addEntity(Coord c, Entity e) {
-        if (!entities.containsKey(c)) {
-            entities.put(c, new ArrayList<>());
-        }
-        entities.get(c).add(e);
-    }
-
-    public void removeEntity(Coord c, Entity e) {
-        if (entities.containsKey(c)) {
-            entities.get(c).remove(e);
-        }
-    }
-
-    //caller's responsibility to check plausibility
-    public void moveEntity(Coord from, Coord to, Entity e) {
-        removeEntity(from, e);
-        addEntity(to, e);
+    public void connect(Coord from, Coord to, String mapId) {
+        final Connection dest = new Connection(to, mapId);
+        connections.putIfAbsent(from, dest);
     }
 
     //Utilities
@@ -117,7 +112,7 @@ public class GameMap {
 
     public Coord mapToScreen(int px, int py, int cx, int cy, int sx, int sy) {
         Coord camPoint = cam(cx, cy, sx, sy);
-        return camPoint.translate(-px, -py);
+        return Coord.get(px-camPoint.x, py-camPoint.y);
     }
 
     public Coord mapToScreen(Coord p, Coord c, Coord s) {
