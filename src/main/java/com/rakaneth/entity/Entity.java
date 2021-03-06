@@ -4,6 +4,8 @@ import com.rakaneth.map.GameMap;
 import squidpony.squidgrid.Direction;
 import squidpony.squidmath.Coord;
 
+import java.awt.*;
+
 public class Entity {
     private Coord position = Coord.get(0, 0);
     public final String name;
@@ -12,17 +14,19 @@ public class Entity {
     public final char glyph;
     public final boolean isBlocker;
     public final int zLayer; //0 = corpse, 1 = item, 2 = actor, 3 = player
+    public final Color color;
 
-    public Entity(char glyph, String name, String desc, boolean isBlocker, int zLayer) {
+    public Entity(char glyph, String name, String desc, boolean isBlocker, int zLayer, Color color) {
         this.name = name;
         this.glyph = glyph;
         this.desc = desc;
         this.isBlocker = isBlocker;
         this.zLayer = zLayer;
+        this.color = color;
     }
 
     public Entity(char glyph, String name, String desc) {
-        this(glyph, name, desc, false, 2);
+        this(glyph, name, desc, false, 2, Color.BLACK);
     }
 
     //Getters

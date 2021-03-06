@@ -9,18 +9,27 @@ import org.slf4j.LoggerFactory;
 import squidpony.squidgrid.Direction;
 import squidpony.squidmath.Coord;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.rakaneth.GameConfig.MAP_SCREEN;
+import static com.rakaneth.Swatch.*;
 
 public class PlayView extends GameView{
     public PlayView(GameState gameState) {
         super(gameState);
     }
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Map<Character, Color> colorTiles = Map.of( //TODO: Add doors & stairs
+            '#', WALL_BG,
+            '.', FLOOR_BG,
+            '~', DEEP_BG,
+            ',' ,SHALLOW_BG);
     @Override
     void render(VPanel panel) {
         renderMap(panel);
@@ -69,7 +78,10 @@ public class PlayView extends GameView{
                 t.ifPresent(tile -> {
                     if (inView(curPoint)) {
                         final var screenPoint = curMap.mapToScreen(curPoint, centerPoint, MAP_SCREEN);
+                        final var color = colorTiles.getOrDefault(tile, Color.BLACK);
                         panel.setCodePointAt(screenPoint.x, screenPoint.y, tile);
+                        panel.setForegroundAt(screenPoint.x, screenPoint.y, Color.WHITE);
+                        panel.setBackgroundAt(screenPoint.x, screenPoint.y, color);
                     }
                 });
             }
@@ -93,6 +105,10 @@ public class PlayView extends GameView{
             if (inView(e.getPos())) {
                 final var screenPoint = gameState.getCurMap().mapToScreen(e.getPos(), centerPoint, MAP_SCREEN);
                 panel.setCodePointAt(screenPoint.x, screenPoint.y, e.glyph);
+                panel.setForegroundAt(screenPoint.x, screenPoint.y, Color.WHITE);
+                if (e.color != Color.BLACK) {
+                    panel.setBackgroundAt(screenPoint.x, screenPoint.y, e.color);
+                }
             }
         }
     }
