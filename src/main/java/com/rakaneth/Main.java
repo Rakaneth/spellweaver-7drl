@@ -1,6 +1,7 @@
 package com.rakaneth;
 
 import com.rakaneth.engine.GameState;
+import com.rakaneth.map.MapBuilder;
 import com.rakaneth.view.KeyPressedListener;
 import com.rakaneth.view.TestView;
 import com.rakaneth.view.UIStack;
@@ -51,6 +52,15 @@ public class Main {
             }
         });
         final var state = new GameState();
+        final var gmap = new MapBuilder(75, 50, state.getMapRNG())
+                .withCarvers(2, 0, 0)
+                .withWaterPct(25)
+                .withDoorPct(15)
+                .withDoubleDoors(true)
+                .withId("test")
+                .withName("Test")
+                .build();
+        
         stack.push(new TestView(state));
 
         SwingUtilities.invokeLater(() -> {

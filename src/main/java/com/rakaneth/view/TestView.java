@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import squidpony.squidgrid.Direction;
 
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.ThreadLocalRandom;
 
