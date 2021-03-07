@@ -26,7 +26,7 @@ public class Entity {
     }
 
     public Entity(char glyph, String name, String desc) {
-        this(glyph, name, desc, false, 2, Color.BLACK);
+        this(glyph, name, desc, true, 2, Color.BLACK);
     }
 
     //Getters

@@ -66,6 +66,8 @@ public class GameMap {
 
     public Connection getConnection(Coord c) { return connections.get(c); }
 
+    public double[][] getResistances() { return resistances;}
+
     //Mutators
     public void setTile(int x, int y, char t) {
         tiles[x][y] = t;

@@ -1,5 +1,6 @@
 package com.rakaneth.engine;
 
+import com.rakaneth.entity.Actor;
 import com.rakaneth.entity.Entity;
 import com.rakaneth.map.GameMap;
 import squidpony.squidmath.Coord;
@@ -10,7 +11,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameState {
-    private Entity player = new Entity('@', "Player", "The player!");
+    private Actor player = new Actor('@', "Player", "The player!");
     private final IRNG mapRNG;
     private final IRNG gameRNG;
     private final Set<Entity> entities = new HashSet<>();
@@ -32,7 +33,7 @@ public class GameState {
     }
 
     //Getters
-    public Entity getPlayer() { return player; }
+    public Actor getPlayer() { return player; }
     public IRNG getGameRNG() { return gameRNG;}
     public IRNG getMapRNG() { return mapRNG; }
     public Set<Entity> getEntities() { return entities;}

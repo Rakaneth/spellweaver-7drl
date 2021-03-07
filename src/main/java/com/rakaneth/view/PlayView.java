@@ -29,7 +29,9 @@ public class PlayView extends GameView{
             '#', WALL_BG,
             '.', FLOOR_BG,
             '~', DEEP_BG,
-            ',' ,SHALLOW_BG);
+            ',' ,SHALLOW_BG,
+            '+', DOOR_BG,
+            '/', DOOR_BG);
     @Override
     void render(VPanel panel) {
         renderMap(panel);
@@ -50,6 +52,7 @@ public class PlayView extends GameView{
             case KeyEvent.VK_D -> player.moveDir(Direction.RIGHT);
             default -> logger.info("Unhandled key: {} ({})", key.getKeyChar(), key.getKeyCode());
         }
+        player.updateFOV(gameState.getCurMap(), player.getPos());
     }
 
     private boolean inView(Coord c) {
@@ -76,7 +79,7 @@ public class PlayView extends GameView{
                 var t = curMap.getTile(x, y);
                 var curPoint = Coord.get(x, y);
                 t.ifPresent(tile -> {
-                    if (inView(curPoint)) {
+                    if (inView(curPoint) && gameState.getPlayer().isVisible(curPoint.x, curPoint.y)) {
                         final var screenPoint = curMap.mapToScreen(curPoint, centerPoint, MAP_SCREEN);
                         final var color = colorTiles.getOrDefault(tile, Color.BLACK);
                         panel.setCodePointAt(screenPoint.x, screenPoint.y, tile);

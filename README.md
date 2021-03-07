@@ -42,3 +42,6 @@ Added some color to map tiles and `Entity`
 This might be a case of premature optimization, but I appear to be
 thrashing the GC somehow. I'll keep going for now, but I will keep
 an eye on this.
+
+Also added FOV. SquidLib makes putting in a lot of the plumbing
+very simple.

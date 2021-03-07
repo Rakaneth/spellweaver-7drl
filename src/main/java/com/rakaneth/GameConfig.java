@@ -2,6 +2,7 @@ package com.rakaneth;
 
 import com.rakaneth.engine.GameState;
 import com.rakaneth.map.MapBuilder;
+import squidpony.squidgrid.FOV;
 import squidpony.squidmath.Coord;
 
 public final class GameConfig {
@@ -14,8 +15,8 @@ public final class GameConfig {
     public static GameState newGame() {
         final var state = new GameState(0xDEADBEEF, 0xDEADBEEF);
         final var gmap = new MapBuilder(75, 50, state.getMapRNG())
-                .withCarvers(2, 0, 0)
-                .withWaterPct(25)
+                .withCarvers(0, 2, 1)
+                .withWaterPct(5)
                 .withDoorPct(15)
                 .withDoubleDoors(true)
                 .withId("test")
@@ -23,8 +24,15 @@ public final class GameConfig {
                 .build();
         state.addMaps(gmap);
         state.setCurMap("test");
-        state.getPlayer().moveTo(state.getCurMap().getRandomFloor());
-        state.getPlayer().setMapId("test");
+        final var curMap = state.getCurMap();
+        final var vw = curMap.getWidth();
+        final var vh = curMap.getHeight();
+        final var player = state.getPlayer();
+        final var pos = player.getPos();
+        player.moveTo(state.getCurMap().getRandomFloor());
+        player.setMapId("test");
+        player.setVisible(new double[vw][vh]);
+        player.updateFOV(state.getCurMap(), player.getPos());
         return state;
     }
 }
