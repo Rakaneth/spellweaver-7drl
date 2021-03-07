@@ -35,6 +35,7 @@ public class Main {
         final var frame = new JFrame("Spellweaver");
         final var panel = new VPanel(GAME_W, GAME_H);
         final var stack = UIStack.getInstance();
+        final var state = GameConfig.newGame();
 
         frame.add(panel);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -43,6 +44,7 @@ public class Main {
         frame.setLocationRelativeTo(null);
         frame.addKeyListener( (KeyPressedListener) e -> {
             if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                GameConfig.saveGame(state);
                 System.exit(0);
             } else {
                 stack.handle(e);
@@ -51,8 +53,7 @@ public class Main {
                 });
             }
         });
-        final var state = GameConfig.newGame();
-        
+
         stack.push(new PlayView(state));
 
         SwingUtilities.invokeLater(() -> {

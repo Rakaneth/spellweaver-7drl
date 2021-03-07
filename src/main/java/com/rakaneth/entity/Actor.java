@@ -2,15 +2,21 @@ package com.rakaneth.entity;
 
 import com.rakaneth.interfaces.Vision;
 
+import java.awt.*;
+
 public class Actor extends Entity implements Vision {
 
-    private double[][] visibleTiles;
-    private double vision = 6.0;
-    private int nrg = 0;
+    protected double[][] visibleTiles;
+    protected double vision = 6.0;
+    protected int nrg = 0;
 
     //Constructors
-    public Actor(char glyph, String name, String desc) {
-        super(glyph, name, desc);
+    public Actor(char glyph, String name, String desc, Color color) {
+        super(glyph, name, desc, true, 2, color);
+    }
+
+    public Actor(char glyph, String name, String desc, int zLayer, Color color) {
+        super(glyph, name, desc, true, zLayer, color);
     }
 
     //Getters

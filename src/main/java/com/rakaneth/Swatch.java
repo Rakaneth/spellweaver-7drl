@@ -8,4 +8,5 @@ public final class Swatch {
     public static final Color SHALLOW_BG = Color.CYAN;
     public static final Color DEEP_BG = Color.BLUE;
     public static final Color DOOR_BG = Color.GRAY;
+    public static final Color EXPLORED_BG = new Color(0,0,128);
 }

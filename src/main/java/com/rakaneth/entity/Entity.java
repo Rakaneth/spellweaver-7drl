@@ -5,8 +5,9 @@ import squidpony.squidgrid.Direction;
 import squidpony.squidmath.Coord;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public class Entity {
+public class Entity implements Serializable {
     private Coord position = Coord.get(0, 0);
     public final String name;
     public final String desc;

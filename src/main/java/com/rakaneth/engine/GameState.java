@@ -2,16 +2,20 @@ package com.rakaneth.engine;
 
 import com.rakaneth.entity.Actor;
 import com.rakaneth.entity.Entity;
+import com.rakaneth.entity.Player;
 import com.rakaneth.map.GameMap;
 import squidpony.squidmath.Coord;
 import squidpony.squidmath.GWTRNG;
 import squidpony.squidmath.IRNG;
 
+import java.awt.*;
+import java.io.Serializable;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
-public class GameState {
-    private Actor player = new Actor('@', "Player", "The player!");
+public class GameState implements Serializable {
+    private Player player = new Player("Player", "The player!", Color.BLACK);
     private final IRNG mapRNG;
     private final IRNG gameRNG;
     private final Set<Entity> entities = new HashSet<>();
@@ -33,7 +37,7 @@ public class GameState {
     }
 
     //Getters
-    public Actor getPlayer() { return player; }
+    public Player getPlayer() { return player; }
     public IRNG getGameRNG() { return gameRNG;}
     public IRNG getMapRNG() { return mapRNG; }
     public Set<Entity> getEntities() { return entities;}

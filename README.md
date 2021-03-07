@@ -26,15 +26,13 @@ going to sleep on that decision for now. Also, I need to try to build a
 JAR now so I can release dev builds to my testers who have graciously
 volunteered to test for me.
 
-## 3.7 ##
-
-Moved `Entity` storage to the `GameState`. Ideally, I should only need to 
-serialize one object when I get to that point. 
+Moved `Entity` storage to the `GameState`. Ideally, I should only need to
+serialize one object when I get to that point.
 
 Also, basic map generation and a properly scrolling map are in. It will need
 some color and checks against the player moving into walls.
 
-Furthermore, `gradlew build` creates a running jar now. Why 
+Furthermore, `gradlew build` creates a running jar now. Why
 IntelliJ's `Build Artifacts` does not baffles me.
 
 Added some color to map tiles and `Entity`
@@ -45,3 +43,10 @@ an eye on this.
 
 Also added FOV. SquidLib makes putting in a lot of the plumbing
 very simple.
+
+## 3.7 ##
+
+Added basic saving and loading. 
+
+
+

@@ -6,10 +6,11 @@ import squidpony.squidmath.GreasedRegion;
 import squidpony.squidmath.IRNG;
 import squidpony.squidmath.MathExtras;
 
+import java.io.Serializable;
 import java.util.*;
 
 
-public class GameMap {
+public class GameMap implements Serializable {
 
     public static class Connection {
         public final Coord dest;
@@ -25,6 +26,7 @@ public class GameMap {
     char[][] tiles;
     GreasedRegion floors;
     GreasedRegion temp;
+    GreasedRegion explored;
     String id;
     String name;
     double[][] resistances;
@@ -82,6 +84,10 @@ public class GameMap {
         connections.putIfAbsent(from, dest);
     }
 
+    public void updateExplored(double[][] light) {
+        explored.or(temp.refill(light, 0.0).not());
+    }
+
     //Utilities
     public boolean inBounds(int x, int y) {
         int w = getWidth();
@@ -121,5 +127,8 @@ public class GameMap {
         return mapToScreen(p.x, p.y, c.x, c.y, s.x, s.y);
     }
 
+    public boolean isExplored(Coord curPoint) {
+        return explored.contains(curPoint);
+    }
 
 }

@@ -99,6 +99,7 @@ public class MapBuilder {
         freshMap.floors = new GreasedRegion(tiles, '.');
         freshMap.temp = new GreasedRegion(freshMap.floors);
         freshMap.resistances = DungeonUtility.generateResistances(tiles);
+        freshMap.explored = new GreasedRegion(freshMap.getWidth(), freshMap.getHeight());
 
         if (upStairs) {
             final var upC = freshMap.getRandomFloor();
