@@ -5,7 +5,7 @@ import com.valkryst.VTerminal.component.VPanel;
 public final class UIUtils {
     //naive writeString implementation
     public static void writeString(int x, int y, String s, VPanel panel) {
-        for (int i=0; i<s.length(); i++) {
+        for (int i = 0; i < s.length(); i++) {
             panel.setCodePointAt(x, y, s.codePointAt(i));
         }
     }
@@ -38,8 +38,8 @@ public final class UIUtils {
         }
 
         public void writeString(int x, int y, String s) {
-            for (int i=0; i<s.length(); i++) {
-                putChar(x+i, y, s.charAt(i));
+            for (int i = 0; i < s.length(); i++) {
+                putChar(x + i, y, s.charAt(i));
             }
         }
 
@@ -58,12 +58,12 @@ public final class UIUtils {
             putChar(xEnd, 0, ur);
             putChar(xEnd, yEnd, lr);
 
-            for (int xs=1; xs<xEnd; xs++) {
+            for (int xs = 1; xs < xEnd; xs++) {
                 putChar(xs, 0, horz);
                 putChar(xs, yEnd, horz);
             }
 
-            for (int ys=1; ys<yEnd; ys++){
+            for (int ys = 1; ys < yEnd; ys++) {
                 putChar(0, ys, vert);
                 putChar(xEnd, ys, vert);
             }
@@ -72,10 +72,6 @@ public final class UIUtils {
                 writeString(1, 0, caption);
             }
         }
-
-
-
-
 
 
     }

@@ -6,8 +6,10 @@ import java.awt.event.KeyListener;
 @FunctionalInterface
 public interface KeyPressedListener extends KeyListener {
     @Override
-    default void keyTyped(KeyEvent e) {}
+    default void keyTyped(KeyEvent e) {
+    }
 
     @Override
-    default void keyReleased(KeyEvent e){}
+    default void keyReleased(KeyEvent e) {
+    }
 }

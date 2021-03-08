@@ -31,8 +31,13 @@ public class Entity implements Serializable {
     }
 
     //Getters
-    public Coord getPos() { return position; }
-    public String mapId() { return mapId;}
+    public Coord getPos() {
+        return position;
+    }
+
+    public String mapId() {
+        return mapId;
+    }
 
     //Mutators
     public void moveTo(Coord c) {

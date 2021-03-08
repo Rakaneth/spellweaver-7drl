@@ -4,7 +4,6 @@ import com.rakaneth.engine.GameState;
 import com.rakaneth.map.MapBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import squidpony.squidgrid.FOV;
 import squidpony.squidmath.Coord;
 
 import java.io.*;

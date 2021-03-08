@@ -2,14 +2,13 @@ package com.rakaneth.view;
 
 import com.valkryst.VTerminal.component.VPanel;
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Stack;
 
 final public class UIStack {
     public static UIStack instance = null;
     final private Stack<GameView> viewStack;
+
     private UIStack() {
         viewStack = new Stack<>();
     }
@@ -24,7 +23,7 @@ final public class UIStack {
 
     public void render(VPanel panel) {
         panel.reset();
-        for (GameView view: viewStack) {
+        for (GameView view : viewStack) {
             view.render(panel);
         }
         panel.repaint();
@@ -34,7 +33,7 @@ final public class UIStack {
         viewStack.peek().handle(key);
     }
 
-    public void pop(){
+    public void pop() {
         viewStack.pop();
     }
 

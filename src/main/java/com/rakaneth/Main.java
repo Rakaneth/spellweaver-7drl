@@ -1,23 +1,15 @@
 package com.rakaneth;
 
-import com.rakaneth.engine.GameState;
-import com.rakaneth.map.MapBuilder;
+import com.rakaneth.entity.DataReader;
 import com.rakaneth.view.KeyPressedListener;
 import com.rakaneth.view.PlayView;
-import com.rakaneth.view.TestView;
 import com.rakaneth.view.UIStack;
-import com.valkryst.VTerminal.component.VFrame;
 import com.valkryst.VTerminal.component.VPanel;
 import com.valkryst.VTerminal.plaf.VTerminalLookAndFeel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 
 import static com.rakaneth.GameConfig.GAME_H;
 import static com.rakaneth.GameConfig.GAME_W;
@@ -42,7 +34,7 @@ public class Main {
         frame.setVisible(true);
         frame.pack();
         frame.setLocationRelativeTo(null);
-        frame.addKeyListener( (KeyPressedListener) e -> {
+        frame.addKeyListener((KeyPressedListener) e -> {
             if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 GameConfig.saveGame(state);
                 System.exit(0);
@@ -55,6 +47,7 @@ public class Main {
         });
 
         stack.push(new PlayView(state));
+        final var testTable = DataReader.loadCreatures();
 
         SwingUtilities.invokeLater(() -> {
             stack.render(panel);

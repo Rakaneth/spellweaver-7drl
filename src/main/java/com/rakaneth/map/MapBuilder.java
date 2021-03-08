@@ -2,7 +2,6 @@ package com.rakaneth.map;
 
 import squidpony.squidgrid.mapping.DungeonGenerator;
 import squidpony.squidgrid.mapping.DungeonUtility;
-import squidpony.squidgrid.mapping.SerpentDeepMapGenerator;
 import squidpony.squidgrid.mapping.SerpentMapGenerator;
 import squidpony.squidmath.GreasedRegion;
 import squidpony.squidmath.IRNG;

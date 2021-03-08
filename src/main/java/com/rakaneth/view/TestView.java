@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import squidpony.squidgrid.Direction;
 
-import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -40,8 +39,8 @@ public class TestView extends GameView {
         int h = panel.getHeightInTiles();
         int w = panel.getWidthInTiles();
         int[][] result = new int[h][w];
-        for (int y=0; y<h; y++) {
-            for (int x=0; x<w; x++) {
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
                 result[y][x] = ThreadLocalRandom.current().nextInt(33, 126);
             }
         }

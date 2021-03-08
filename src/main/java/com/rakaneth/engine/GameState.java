@@ -1,6 +1,5 @@
 package com.rakaneth.engine;
 
-import com.rakaneth.entity.Actor;
 import com.rakaneth.entity.Entity;
 import com.rakaneth.entity.Player;
 import com.rakaneth.map.GameMap;
@@ -10,8 +9,8 @@ import squidpony.squidmath.IRNG;
 
 import java.awt.*;
 import java.io.Serializable;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameState implements Serializable {
@@ -37,14 +36,25 @@ public class GameState implements Serializable {
     }
 
     //Getters
-    public Player getPlayer() { return player; }
-    public IRNG getGameRNG() { return gameRNG;}
-    public IRNG getMapRNG() { return mapRNG; }
-    public Set<Entity> getEntities() { return entities;}
+    public Player getPlayer() {
+        return player;
+    }
+
+    public IRNG getGameRNG() {
+        return gameRNG;
+    }
+
+    public IRNG getMapRNG() {
+        return mapRNG;
+    }
+
+    public Set<Entity> getEntities() {
+        return entities;
+    }
 
     //Mutators
     public void addMaps(GameMap... maps) {
-        for (GameMap m: maps) {
+        for (GameMap m : maps) {
             this.maps.putIfAbsent(m.getId(), m);
         }
     }
@@ -64,7 +74,9 @@ public class GameState implements Serializable {
                 .collect(Collectors.toList());
     }
 
-    public GameMap getCurMap() { return maps.get(curMapId); }
+    public GameMap getCurMap() {
+        return maps.get(curMapId);
+    }
 
     public List<Entity> getEntitiesAt(final Coord c, final String mapId) {
         return entities.stream()

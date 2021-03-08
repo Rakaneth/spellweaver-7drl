@@ -1,13 +1,14 @@
 package com.rakaneth.map;
 
-import com.rakaneth.entity.Entity;
 import squidpony.squidmath.Coord;
 import squidpony.squidmath.GreasedRegion;
 import squidpony.squidmath.IRNG;
 import squidpony.squidmath.MathExtras;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 
 public class GameMap implements Serializable {
@@ -66,9 +67,13 @@ public class GameMap implements Serializable {
         return id;
     }
 
-    public Connection getConnection(Coord c) { return connections.get(c); }
+    public Connection getConnection(Coord c) {
+        return connections.get(c);
+    }
 
-    public double[][] getResistances() { return resistances;}
+    public double[][] getResistances() {
+        return resistances;
+    }
 
     //Mutators
     public void setTile(int x, int y, char t) {
@@ -105,7 +110,7 @@ public class GameMap implements Serializable {
     }
 
     private int calc(int p, int m, int s) {
-        return MathExtras.clamp(p - s/2, 0, Math.max(0, m-s));
+        return MathExtras.clamp(p - s / 2, 0, Math.max(0, m - s));
     }
 
     public Coord cam(int cx, int cy, int sx, int sy) {
@@ -120,7 +125,7 @@ public class GameMap implements Serializable {
 
     public Coord mapToScreen(int px, int py, int cx, int cy, int sx, int sy) {
         Coord camPoint = cam(cx, cy, sx, sy);
-        return Coord.get(px-camPoint.x, py-camPoint.y);
+        return Coord.get(px - camPoint.x, py - camPoint.y);
     }
 
     public Coord mapToScreen(Coord p, Coord c, Coord s) {

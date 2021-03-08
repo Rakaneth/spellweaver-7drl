@@ -1,7 +1,6 @@
 package com.rakaneth.view;
 
 import com.rakaneth.GameConfig;
-import com.rakaneth.Swatch;
 import com.rakaneth.engine.GameState;
 import com.rakaneth.entity.Entity;
 import com.valkryst.VTerminal.component.VPanel;
@@ -13,7 +12,6 @@ import squidpony.squidmath.Coord;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,7 +19,7 @@ import java.util.stream.Collectors;
 import static com.rakaneth.GameConfig.*;
 import static com.rakaneth.Swatch.*;
 
-public class PlayView extends GameView{
+public class PlayView extends GameView {
     private UIUtils.Console msgs;
     private UIUtils.Console skills;
     private UIUtils.Console info;
@@ -30,14 +28,16 @@ public class PlayView extends GameView{
     public PlayView(GameState gameState) {
         super(gameState);
     }
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Map<Character, Color> colorTiles = Map.of( //TODO: Add doors & stairs
             '#', WALL_BG,
             '.', FLOOR_BG,
             '~', DEEP_BG,
-            ',' ,SHALLOW_BG,
+            ',', SHALLOW_BG,
             '+', DOOR_BG,
             '/', DOOR_BG);
+
     @Override
     void render(VPanel panel) {
         renderMap(panel);
@@ -65,24 +65,26 @@ public class PlayView extends GameView{
     private boolean inView(Coord c) {
         final var screenPos = gameState.getCurMap()
                 .mapToScreen(
-                    c,
-                    gameState.getPlayer().getPos(),
-                    MAP_SCREEN);
+                        c,
+                        gameState.getPlayer().getPos(),
+                        MAP_SCREEN);
         return screenPos.x >= 0
                 && screenPos.y >= 0
                 && screenPos.x < GameConfig.MAP_W
                 && screenPos.y < MAP_H;
     }
 
-    private Coord centerPos() { return gameState.getPlayer().getPos(); }
+    private Coord centerPos() {
+        return gameState.getPlayer().getPos();
+    }
 
     //TODO: render functions
     private void renderMap(VPanel panel) {
         final var centerPoint = centerPos();
         final var curMap = gameState.getCurMap();
         final var camPoint = curMap.cam(centerPos(), MAP_SCREEN);
-        for (int y = camPoint.y; y< MAP_H + camPoint.y; y++) {
-            for (int x=camPoint.x; x<GameConfig.MAP_W + camPoint.x; x++) {
+        for (int y = camPoint.y; y < MAP_H + camPoint.y; y++) {
+            for (int x = camPoint.x; x < GameConfig.MAP_W + camPoint.x; x++) {
                 var t = curMap.getTile(x, y);
                 var curPoint = Coord.get(x, y);
                 t.ifPresent(tile -> {
@@ -106,14 +108,16 @@ public class PlayView extends GameView{
             }
         }
     }
-    private void renderMessages(VPanel panel){
+
+    private void renderMessages(VPanel panel) {
         if (msgs == null) {
             msgs = new UIUtils.Console(0, MAP_H, MSG_W, MSG_H, "Messages", panel);
         }
         msgs.border();
         //TODO: rest of messages
     }
-    private void renderAbilities(VPanel panel){
+
+    private void renderAbilities(VPanel panel) {
         if (skills == null) {
             skills = new UIUtils.Console(MSG_W, MAP_H, SKIL_W, SKIL_H, "Magic", panel);
         }
@@ -121,7 +125,8 @@ public class PlayView extends GameView{
         skills.border();
         //TODO: rest of skills
     }
-    private void renderStats(VPanel panel){
+
+    private void renderStats(VPanel panel) {
         if (stats == null) {
             stats = new UIUtils.Console(MSG_W + SKIL_W, 0, STAT_W, STAT_H, "Stats", panel);
         }
@@ -129,7 +134,8 @@ public class PlayView extends GameView{
         stats.border();
         //TODO: rest of Stats
     }
-    private void renderEntities(VPanel panel){
+
+    private void renderEntities(VPanel panel) {
         final var m = gameState.getCurMap();
         final var centerPoint = centerPos();
         final var toDraw = gameState.getCurrentEntities().stream()
@@ -140,7 +146,7 @@ public class PlayView extends GameView{
                 .map(Optional::get)
                 .collect(Collectors.toList());
 
-        for (Entity e: toDraw) {
+        for (Entity e : toDraw) {
             if (inView(e.getPos())) {
                 final var screenPoint = gameState.getCurMap().mapToScreen(e.getPos(), centerPoint, MAP_SCREEN);
                 panel.setCodePointAt(screenPoint.x, screenPoint.y, e.glyph);
