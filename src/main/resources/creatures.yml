@@ -1,0 +1,25 @@
+---
+table:
+  imp:
+    glyph: d
+    color: red
+    hp: 15
+    will: 3
+    damType: FIRE
+    atk: 5
+    dfp: 1
+    weakness: ICE
+    resistance: FIRE
+    spd: 3
+    ai: CAST
+    freq: 10
+  wolf:
+    glyph: w
+    color: "121,101,97"
+    hp: 25
+    damType: PHYSICAL
+    atk: 10
+    dfp: 4
+    spd: 5
+    ai: HUNT
+    freq: 8
