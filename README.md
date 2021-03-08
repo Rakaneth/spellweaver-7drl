@@ -46,7 +46,8 @@ very simple.
 
 ## 3.7 ##
 
-Added basic saving and loading. 
+Added basic saving and loading, the main game view, and file reading.
+Java generics are a mess.
 
 
 
