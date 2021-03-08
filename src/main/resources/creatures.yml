@@ -3,6 +3,8 @@ table:
   imp:
     glyph: d
     color: red
+    name: imp
+    desc: A tiny, flying creature made of fire.
     hp: 15
     will: 3
     damType: FIRE
@@ -16,6 +18,8 @@ table:
   wolf:
     glyph: w
     color: "121,101,97"
+    name: wolf
+    desc: A lone wolf, rabid and ferocious
     hp: 25
     damType: PHYSICAL
     atk: 10

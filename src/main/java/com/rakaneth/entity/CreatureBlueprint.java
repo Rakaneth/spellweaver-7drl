@@ -14,4 +14,6 @@ public class CreatureBlueprint extends Blueprint {
     public DamageTypes weakness = null;
     public DamageTypes resistance = null;
     public String ai = "hunt";
+    public String name = "No name";
+    public String desc = "No desc";
 }
