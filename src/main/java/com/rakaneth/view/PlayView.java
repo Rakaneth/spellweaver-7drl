@@ -157,4 +157,6 @@ public class PlayView extends GameView {
             }
         }
     }
+
+    enum DrawMode { NORMAL, TARGETING}
 }

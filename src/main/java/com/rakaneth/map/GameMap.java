@@ -75,6 +75,8 @@ public class GameMap implements Serializable {
         return resistances;
     }
 
+    public char[][] getTiles() { return tiles; }
+
     //Mutators
     public void setTile(int x, int y, char t) {
         tiles[x][y] = t;

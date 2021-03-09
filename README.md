@@ -1,21 +1,35 @@
 # Spellweaver #
-
 This is my 2021 7DRL entry. This is a classic roguelike with ASCII graphics.
 
-# Libraries #
-
+## Libraries ##
 This uses VTerminal, a Swing ASCII console frontend, and SquidLib, which
 provides various utilities suited for roguelikes.
 
-# Game Premise #
-
+## Game Premise ##
 You are an apprentice sorcerer sent into a musty dungeon to retrieve your
 master's spellbook. You will encounter various monsters along the way,
 using combinations of spells to defeat them.
 
-# DevLog #
+## How to Build ##
+You will need JDK 15 or higher to build this. I personally used the OpenJDK.
 
-## 3.6 ##
+```
+git clone https://github.com/Rakaneth/spellweaver-7drl
+cd spellweaver-7drl
+gradlew clean build
+```
+
+The resultant executable JAR file will be in 
+`./build/libs/spellweaver-7drl-<version number>.jar`.
+
+Jars will also be available under this repo's Releases.
+
+## How to Play ##
+Coming Soon!
+
+## DevLog ##
+
+### 3.6 ###
 Started with some scaffolding to ensure VTerminal would work how
 I wanted. Implemented the scaffolding for `GameMap` and `MapBuilder` classes,
 which encapsulate the state of the game map and build it, respectively.
@@ -44,10 +58,13 @@ an eye on this.
 Also added FOV. SquidLib makes putting in a lot of the plumbing
 very simple.
 
-## 3.7 ##
-
+### 3.7 ###
 Added basic saving and loading, the main game view, and file reading.
 Java generics are a mess.
 
-
-
+### 3.8 ###
+Working on the game's main mechanic - spellcasting. The general idea is
+for the player to use 1 to 3 different magical elements, with the first
+element providing a base effect and the other two modifying the spell,
+giving it properties like AOE and increased power, at the expense of
+`Will`. 
