@@ -1,25 +1,25 @@
 package com.rakaneth.engine;
 
 import com.rakaneth.entity.Entity;
+import com.rakaneth.entity.EntityFactory;
 import com.rakaneth.entity.Player;
 import com.rakaneth.map.GameMap;
 import squidpony.squidmath.Coord;
 import squidpony.squidmath.GWTRNG;
 import squidpony.squidmath.IRNG;
 
-import java.awt.*;
 import java.io.Serializable;
-import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameState implements Serializable {
-    private Player player = new Player("Player", "The player!", Color.BLACK);
-    private final IRNG mapRNG;
-    private final IRNG gameRNG;
+    public final Player player;
+    public final IRNG mapRNG;
+    public final IRNG gameRNG;
     private final Set<Entity> entities = new HashSet<>();
     private final Map<String, GameMap> maps = new HashMap<>();
     private String curMapId;
+    public transient final EntityFactory entityFactory;
 
 
     //Constructors
@@ -27,30 +27,20 @@ public class GameState implements Serializable {
     public GameState(long mapSeed, long gameSeed) {
         mapRNG = new GWTRNG(mapSeed);
         gameRNG = new GWTRNG(gameSeed);
+        entityFactory = new EntityFactory(mapRNG);
+        player = entityFactory.createPlayer("Farin");
         entities.add(player);
     }
 
     public GameState() {
         mapRNG = new GWTRNG();
         gameRNG = new GWTRNG();
+        entityFactory = new EntityFactory(mapRNG);
+        player = entityFactory.createPlayer("Farin");
+        entities.add(player);
     }
 
     //Getters
-    public Player getPlayer() {
-        return player;
-    }
-
-    public IRNG getGameRNG() {
-        return gameRNG;
-    }
-
-    public IRNG getMapRNG() {
-        return mapRNG;
-    }
-
-    public Set<Entity> getEntities() {
-        return entities;
-    }
 
     //Mutators
     public void addMaps(GameMap... maps) {
@@ -92,6 +82,18 @@ public class GameState implements Serializable {
         return getEntitiesAt(c, mapId).stream()
                 .filter(e -> e.isBlocker)
                 .findFirst();
+    }
+
+    public Optional<Entity> getBlockerAt(final Coord c) {
+        return getBlockerAt(c, curMapId);
+    }
+
+    public boolean isBlocked(final Coord c, final String mapId) {
+        return getBlockerAt(c, mapId).isPresent() || maps.get(mapId).isBlocking(c.x, c.y);
+    }
+
+    public boolean isBlocked(final Coord c) {
+        return isBlocked(c, curMapId);
     }
 
 }

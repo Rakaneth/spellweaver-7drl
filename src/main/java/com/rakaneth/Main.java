@@ -1,6 +1,5 @@
 package com.rakaneth;
 
-import com.rakaneth.entity.DataReader;
 import com.rakaneth.view.KeyPressedListener;
 import com.rakaneth.view.PlayView;
 import com.rakaneth.view.UIStack;
@@ -47,7 +46,6 @@ public class Main {
         });
 
         stack.push(new PlayView(state));
-        final var testTable = DataReader.loadCreatures();
 
         SwingUtilities.invokeLater(() -> {
             stack.render(panel);

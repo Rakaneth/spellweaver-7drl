@@ -1,7 +1,9 @@
 package com.rakaneth.view;
 
 import com.rakaneth.GameConfig;
+import com.rakaneth.engine.DamageTypes;
 import com.rakaneth.engine.GameState;
+import com.rakaneth.engine.effect.Effect;
 import com.rakaneth.entity.Entity;
 import com.valkryst.VTerminal.component.VPanel;
 import org.slf4j.Logger;
@@ -44,19 +46,22 @@ public class PlayView extends GameView {
         renderMessages(panel);
         renderAbilities(panel);
         renderStats(panel);
+        renderInfo(panel);
         renderEntities(panel);
     }
 
     @Override
     void handle(KeyEvent key) {
         //TODO: handle keypresses
-        final var player = gameState.getPlayer();
+        final var player = gameState.player;
         switch (key.getKeyCode()) {
             case KeyEvent.VK_W -> player.moveDir(Direction.UP);
             case KeyEvent.VK_S -> player.moveDir(Direction.DOWN);
             case KeyEvent.VK_A -> player.moveDir(Direction.LEFT);
             case KeyEvent.VK_D -> player.moveDir(Direction.RIGHT);
             case KeyEvent.VK_L -> gameState = GameConfig.loadGame();
+            case KeyEvent.VK_UP -> player.heal(1);
+            case KeyEvent.VK_DOWN -> player.takeDamage(1, DamageTypes.PHYSICAL);
             default -> logger.info("Unhandled key: {} ({})", key.getKeyChar(), key.getKeyCode());
         }
         player.updateFOV(gameState.getCurMap(), player.getPos());
@@ -66,7 +71,7 @@ public class PlayView extends GameView {
         final var screenPos = gameState.getCurMap()
                 .mapToScreen(
                         c,
-                        gameState.getPlayer().getPos(),
+                        gameState.player.getPos(),
                         MAP_SCREEN);
         return screenPos.x >= 0
                 && screenPos.y >= 0
@@ -75,7 +80,7 @@ public class PlayView extends GameView {
     }
 
     private Coord centerPos() {
-        return gameState.getPlayer().getPos();
+        return gameState.player.getPos();
     }
 
     //TODO: render functions
@@ -92,7 +97,7 @@ public class PlayView extends GameView {
                         final var screenPoint = curMap.mapToScreen(curPoint, centerPoint, MAP_SCREEN);
                         Color bg = Color.BLACK;
                         Color fg = Color.WHITE;
-                        if (gameState.getPlayer().isVisible(curPoint.x, curPoint.y)) {
+                        if (gameState.player.isVisible(curPoint.x, curPoint.y)) {
                             bg = colorTiles.getOrDefault(tile, Color.BLACK);
                         } else if (curMap.isExplored(curPoint)) {
                             bg = EXPLORED_BG;
@@ -127,9 +132,16 @@ public class PlayView extends GameView {
     }
 
     private void renderStats(VPanel panel) {
+        final var player = gameState.player;
         if (stats == null) {
             stats = new UIUtils.Console(MSG_W + SKIL_W, 0, STAT_W, STAT_H, "Stats", panel);
         }
+
+        stats.writeString(1, 1, player.name + " - " + player.desc);
+        stats.writeString(1, 2, "HP: " + player.getHp() + "/" + player.getMaxHp());
+        stats.writeString(1, 3, "Atk: " + player.getAtk());
+        stats.writeString(1, 4, "Dfp: " + player.getDfp());
+        stats.writeString(1, 5, "Will: " + player.getWil());
 
         stats.border();
         //TODO: rest of Stats
@@ -158,5 +170,18 @@ public class PlayView extends GameView {
         }
     }
 
-    enum DrawMode { NORMAL, TARGETING}
+    private void renderInfo(VPanel panel) {
+        if (info == null) {
+            info = new UIUtils.Console(MSG_W + SKIL_W, MAP_H, INFO_W, INFO_H, "Effects", panel);
+        }
+
+        int i = 1;
+        for (Effect e : gameState.player.getEffects()) {
+            info.writeString(1, i++, e.toString());
+        }
+
+        info.border();
+    }
+
+    enum DrawMode {NORMAL, TARGETING}
 }

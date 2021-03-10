@@ -18,14 +18,14 @@ public class TestView extends GameView {
 
     @Override
     public void render(VPanel panel) {
-        final var playerPos = gameState.getPlayer().getPos();
-        final var playerGlyph = gameState.getPlayer().glyph;
+        final var playerPos = gameState.player.getPos();
+        final var playerGlyph = gameState.player.glyph;
         panel.setCodePointAt(playerPos.x, playerPos.y, playerGlyph);
     }
 
     @Override
     public void handle(KeyEvent key) {
-        final var player = gameState.getPlayer();
+        final var player = gameState.player;
         switch (key.getKeyCode()) {
             case KeyEvent.VK_W -> player.moveDir(Direction.UP);
             case KeyEvent.VK_S -> player.moveDir(Direction.DOWN);

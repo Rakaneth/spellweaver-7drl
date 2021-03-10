@@ -1,8 +1,8 @@
 package com.rakaneth.engine;
 
-import com.rakaneth.map.GameMap;
-import squidpony.squidai.*;
-import squidpony.squidgrid.Radius;
+import squidpony.squidai.AOE;
+import squidpony.squidai.PointAOE;
+import squidpony.squidai.Technique;
 import squidpony.squidmath.Coord;
 
 public class Spell {
@@ -33,11 +33,25 @@ public class Spell {
         return this.tech;
     }
 
-    public Coord getOrigin() { return origin; }
-    public Coord getTarget() { return target; }
-    public int getRadius() { return radius; }
-    public int getPotency() { return potency; }
-    public int getCost() { return cost; }
+    public Coord getOrigin() {
+        return origin;
+    }
+
+    public Coord getTarget() {
+        return target;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public int getPotency() {
+        return potency;
+    }
+
+    public int getCost() {
+        return cost;
+    }
 
     //Mutators
     public void setOrigin(Coord origin) {

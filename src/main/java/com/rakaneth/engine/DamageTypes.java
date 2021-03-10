@@ -13,13 +13,13 @@ public enum DamageTypes {
             1
     ) {
         @Override
-        void modifySecondCast(Spell spell, Coord origin, Coord center, int radius, int range) {
+        void modifyThirdcast(Spell spell, Coord origin, Coord center, int radius, int range) {
             spell.setAOE(new BlastAOE(center, radius, Radius.DIAMOND));
             spell.setCost(baseCost + 1);
         }
 
         @Override
-        void modifyThirdCast(Spell spell) {
+        void modifySecondCast(Spell spell) {
             spell.setPotency(spell.getPotency() + 2);
             spell.setCost(spell.getCost() + 2);
         }
@@ -29,14 +29,14 @@ public enum DamageTypes {
             "@Name fill$ the air with power!",
             "@Name infuse$ the spell with the chill of ice!",
             1
-    ){
+    ) {
         @Override
-        void modifySecondCast(Spell spell, Coord origin, Coord center, int radius, int range) {
+        void modifyThirdcast(Spell spell, Coord origin, Coord center, int radius, int range) {
             //TODO: CloudAOE
         }
 
         @Override
-        void modifyThirdCast(Spell spell) {
+        void modifySecondCast(Spell spell) {
             //TODO: add slowing effect to spell, +2
         }
     },
@@ -47,12 +47,12 @@ public enum DamageTypes {
             1
     ) {
         @Override
-        void modifySecondCast(Spell spell, Coord origin, Coord center, int radius, int range) {
+        void modifyThirdcast(Spell spell, Coord origin, Coord center, int radius, int range) {
             //TODO: PointAOE, potency + 2
         }
 
         @Override
-        void modifyThirdCast(Spell spell) {
+        void modifySecondCast(Spell spell) {
             //TODO: grant shield effect to caster, +1
         }
     },
@@ -63,12 +63,12 @@ public enum DamageTypes {
             1
     ) {
         @Override
-        void modifySecondCast(Spell spell, Coord origin, Coord center, int radius, int range) {
+        void modifyThirdcast(Spell spell, Coord origin, Coord center, int radius, int range) {
             //TODO: BeamAOE
         }
 
         @Override
-        void modifyThirdCast(Spell spell) {
+        void modifySecondCast(Spell spell) {
             //TODO: cut cast time in half +3
         }
     },
@@ -79,12 +79,12 @@ public enum DamageTypes {
             2
     ) {
         @Override
-        void modifySecondCast(Spell spell, Coord origin, Coord center, int radius, int range) {
+        void modifyThirdcast(Spell spell, Coord origin, Coord center, int radius, int range) {
             //TODO: PointAOE, stop effect
         }
 
         @Override
-        void modifyThirdCast(Spell spell) {
+        void modifySecondCast(Spell spell) {
             //TODO: Potency doubled, cost * 1.5
         }
 
@@ -96,12 +96,12 @@ public enum DamageTypes {
             3
     ) {
         @Override
-        void modifySecondCast(Spell spell, Coord origin, Coord center, int radius, int range) {
+        void modifyThirdcast(Spell spell, Coord origin, Coord center, int radius, int range) {
             //TODO: BeamAOE
         }
 
         @Override
-        void modifyThirdCast(Spell spell) {
+        void modifySecondCast(Spell spell) {
             //TODO: Healing
         }
     },
@@ -110,27 +110,40 @@ public enum DamageTypes {
             "@Name casts the magic in shadow!",
             "@Name instills fear of the dark!",
             3
-    ){
+    ) {
         @Override
-        void modifySecondCast(Spell spell, Coord origin, Coord center, int radius, int range) {
+        void modifyThirdcast(Spell spell, Coord origin, Coord center, int radius, int range) {
             //TODO: BurstAOE
         }
 
         @Override
-        void modifyThirdCast(Spell spell) {
+        void modifySecondCast(Spell spell) {
             //TODO: fear effect
         }
 
     }, PHYSICAL("", "", "", 0) {
         @Override
-        void modifySecondCast(Spell spell, Coord origin, Coord center, int radius, int range) {}
+        void modifyThirdcast(Spell spell, Coord origin, Coord center, int radius, int range) {
+        }
 
         @Override
-        void modifyThirdCast(Spell spell) {}
+        void modifySecondCast(Spell spell) {
+        }
+    }, NONE("", "", "", 0) {
+        //Null element, no damage should have this type
+        @Override
+        void modifyThirdcast(Spell spell, Coord origin, Coord center, int radius, int range) {
+        }
+
+        @Override
+        void modifySecondCast(Spell spell) {
+        }
     };
 
-    abstract void modifySecondCast(Spell spell, Coord origin, Coord center, int radius, int range);
-    abstract void modifyThirdCast(Spell spell);
+    abstract void modifyThirdcast(Spell spell, Coord origin, Coord center, int radius, int range);
+
+    abstract void modifySecondCast(Spell spell);
+
     public final String firstCast;
     public final String secondCast;
     public final String thirdCast;

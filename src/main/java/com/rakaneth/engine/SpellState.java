@@ -1,11 +1,7 @@
 package com.rakaneth.engine;
 
-import squidpony.squidai.LineAOE;
-import squidpony.squidai.PointAOE;
-import squidpony.squidmath.Coord;
-
 public enum SpellState {
-    BASE{
+    BASE {
         @Override
         SpellState update(boolean skip) {
             if (skip) {
@@ -14,7 +10,7 @@ public enum SpellState {
             return FIRST_MOD;
         }
     },
-    FIRST_MOD{
+    FIRST_MOD {
         @Override
         SpellState update(boolean skip) {
             if (skip) {
@@ -23,13 +19,13 @@ public enum SpellState {
             return SECOND_MOD;
         }
     },
-    SECOND_MOD{
+    SECOND_MOD {
         @Override
         SpellState update(boolean skip) {
             return DONE;
         }
     },
-    DONE{
+    DONE {
         @Override
         SpellState update(boolean skip) {
             return DONE;

@@ -2,7 +2,7 @@
 table:
   imp:
     glyph: d
-    color: red
+    color: 128,0,0
     name: imp
     desc: A tiny, flying creature made of fire.
     hp: 15
@@ -17,7 +17,7 @@ table:
     freq: 10
   wolf:
     glyph: w
-    color: "121,101,97"
+    color: 121,101,97
     name: wolf
     desc: A lone wolf, rabid and ferocious
     hp: 25
@@ -27,3 +27,13 @@ table:
     spd: 5
     ai: HUNT
     freq: 8
+  player:
+    color: 188,188,0
+    desc: The player
+    hp: 30
+    damType: PHYSICAL
+    atk: 1
+    dfp: 1
+    will: 5
+    spd: 5
+

@@ -67,4 +67,19 @@ Working on the game's main mechanic - spellcasting. The general idea is
 for the player to use 1 to 3 different magical elements, with the first
 element providing a base effect and the other two modifying the spell,
 giving it properties like AOE and increased power, at the expense of
-`Will`. 
+`Power`. 
+
+### 3.9 ###
+In working on the code behind this mechanic, I discovered I had a lot of 
+plumbing that still needed to be done, so now `Combatant` entities
+have proper stats, can receive damage, be healed, and can have
+`Effects` on them - buffs, debuffs, crowd-control, damage-over-time, etc.
+
+`Combatant`s have the following stats by default:
+
+* `atk`: attack power, how hard it hits in melee
+* `dfp`: defense power, how well it absorbs damage
+* `will`: mental fortitude, the ability to resist things like `Fear` and `Stun`.
+  `Will` also affects the hero's spellcasting.
+*  `hp`: Hit points, dead at 0
+

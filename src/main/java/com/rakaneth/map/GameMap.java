@@ -33,6 +33,7 @@ public class GameMap implements Serializable {
     double[][] resistances;
     final private IRNG rng;
     final private Map<Coord, Connection> connections = new HashMap<>();
+    final private String blockers = "#~+";
 
     GameMap(IRNG rng) {
         this.rng = rng;
@@ -75,7 +76,9 @@ public class GameMap implements Serializable {
         return resistances;
     }
 
-    public char[][] getTiles() { return tiles; }
+    public char[][] getTiles() {
+        return tiles;
+    }
 
     //Mutators
     public void setTile(int x, int y, char t) {
@@ -101,6 +104,11 @@ public class GameMap implements Serializable {
         int h = getHeight();
 
         return x >= 0 && x < w && y >= 0 && y < h;
+    }
+
+    public boolean isBlocking(int x, int y) {
+        final var t = getTile(x, y);
+        return t.isEmpty() || blockers.indexOf(t.get()) > -1;
     }
 
     public Coord getRandomFloor() {
