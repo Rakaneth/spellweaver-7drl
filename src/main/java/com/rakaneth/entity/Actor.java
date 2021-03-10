@@ -44,4 +44,9 @@ public class Actor extends Entity implements Vision {
         this.vision = vision;
     }
 
+    public boolean canSee(Entity other) {
+        final var otherPos = other.getPos();
+        return isVisible(otherPos.x, otherPos.y);
+    }
+
 }

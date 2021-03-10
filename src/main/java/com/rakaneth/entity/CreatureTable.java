@@ -5,6 +5,7 @@ import squidpony.squidmath.ProbabilityTable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class CreatureTable implements BlueprintTable<CreatureBlueprint> {
     public Map<String, CreatureBlueprint> table = new HashMap<>();
@@ -18,6 +19,16 @@ public class CreatureTable implements BlueprintTable<CreatureBlueprint> {
         final var probTable = new ProbabilityTable<CreatureBlueprint>(rng);
         table.forEach((k, v) -> {
             probTable.add(v, v.freq);
+        });
+        return probTable;
+    }
+
+    public ProbabilityTable<CreatureBlueprint> getProbabilityTable(IRNG rng, Predicate<CreatureBlueprint> pred) {
+        final var probTable = new ProbabilityTable<CreatureBlueprint>(rng);
+        table.forEach((k, v) -> {
+           if (pred.test(v)) {
+               probTable.add(v, v.freq);
+           }
         });
         return probTable;
     }

@@ -17,4 +17,5 @@ public class CreatureBlueprint extends Blueprint {
     public String name = "No name";
     public String desc = "No desc";
     public double vision = 6.0;
+    public int level = 0;
 }

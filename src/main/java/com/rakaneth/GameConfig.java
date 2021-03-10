@@ -32,13 +32,16 @@ public final class GameConfig {
     public static GameState newGame() {
         final var state = new GameState(0xDEADBEEF, 0xDEADBEEF);
         MessageDispatcher.create(state);
-        final var gmap = new MapBuilder(75, 50, state.mapRNG)
+        final var gmap = new MapBuilder(75, 50, state.mapRNG, state.entityFactory, state)
                 .withCarvers(0, 2, 1)
                 .withWaterPct(5)
                 .withDoorPct(15)
                 .withDoubleDoors(true)
                 .withId("test")
                 .withName("Test")
+                .withCreaturesOfLevel(2)
+                .withMaxCreatures(20)
+                .withCreature("greaterShadow")
                 .build();
         state.addMaps(gmap);
         state.setCurMap("test");

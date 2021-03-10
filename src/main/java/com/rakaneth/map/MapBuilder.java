@@ -1,10 +1,18 @@
 package com.rakaneth.map;
 
+import com.rakaneth.engine.GameState;
+import com.rakaneth.entity.Combatant;
+import com.rakaneth.entity.EntityFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import squidpony.squidgrid.mapping.DungeonGenerator;
 import squidpony.squidgrid.mapping.DungeonUtility;
 import squidpony.squidgrid.mapping.SerpentMapGenerator;
 import squidpony.squidmath.GreasedRegion;
 import squidpony.squidmath.IRNG;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapBuilder {
     private boolean lit = false;
@@ -22,11 +30,19 @@ public class MapBuilder {
     private int waterPct = 0;
     private boolean upStairs = false;
     private boolean downStairs = false;
+    private int creatureLevel = 0;
+    private int creatureMax = 0;
+    private final EntityFactory ef;
+    private final static Logger logger = LoggerFactory.getLogger(MapBuilder.class);
+    private final GameState state;
+    private final List<String> buildIDs = new ArrayList<>();
 
-    public MapBuilder(int width, int height, IRNG rng) {
+    public MapBuilder(int width, int height, IRNG rng, EntityFactory ef, GameState state) {
         this.rng = rng;
         spt = new SerpentMapGenerator(width, height, rng);
         dgn = new DungeonGenerator(width, height, rng);
+        this.ef = ef;
+        this.state = state;
     }
 
     public MapBuilder withCarvers(int cave, int box, int roundRoom) {
@@ -72,6 +88,21 @@ public class MapBuilder {
         return this;
     }
 
+    public MapBuilder withCreaturesOfLevel(int level){
+        creatureLevel = level;
+        return this;
+    }
+
+    public MapBuilder withMaxCreatures(int creatures) {
+        creatureMax = creatures;
+        return this;
+    }
+
+    public MapBuilder withCreature(String id) {
+        buildIDs.add(id);
+        return this;
+    }
+
     public GameMap build() {
         GameMap freshMap = new GameMap(rng);
 
@@ -99,6 +130,31 @@ public class MapBuilder {
         freshMap.temp = new GreasedRegion(freshMap.floors);
         freshMap.resistances = DungeonUtility.generateResistances(tiles);
         freshMap.explored = new GreasedRegion(freshMap.getWidth(), freshMap.getHeight());
+
+        if (creatureMax > 0) {
+            final var numCreatures = rng.nextInt(creatureMax);
+            logger.info("Attempting to build {} creatures on map {}", numCreatures, freshMap.name);
+            Combatant newCreature;
+            for (int i=0; i<numCreatures; i++) {
+                newCreature = ef.randomMonster(creatureLevel);
+                newCreature.moveTo(freshMap.getRandomFloor());
+                newCreature.setMapId(freshMap.id);
+                state.addEntities(newCreature);
+                logger.info("Placing new {} on map {} at {}", newCreature.name, freshMap.name, newCreature.getPos());
+            }
+        }
+        Combatant pickedCreature;
+        for (String buildID: buildIDs) {
+            pickedCreature = ef.monsterFromString(buildID);
+            pickedCreature.moveTo(freshMap.getRandomFloor());
+            pickedCreature.setMapId(freshMap.id);
+            state.addEntities(pickedCreature);
+            logger.info(
+                    "Placing chosen creature {} on map {} at {}",
+                    pickedCreature.name,
+                    freshMap.name,
+                    pickedCreature.getPos());
+        }
 
         if (upStairs) {
             final var upC = freshMap.getRandomFloor();

@@ -88,3 +88,11 @@ without needing to pass it around like a football.
 
 Also added a `Poison` effect and changed some of the plumbing on `Effects`
 to make messaging regarding them easier.
+
+### 3.10 ###
+More hacking on creatures - the `MapBuilder` now can seed its own 
+creatures. There is an argument for leaving that to the caller,
+but I like the idea of having everything the map needs to function
+in the builder.
+
+Some new creatures got added to the creatures.yml file.

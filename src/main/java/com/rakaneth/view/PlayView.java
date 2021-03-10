@@ -159,11 +159,13 @@ public class PlayView extends GameView {
             stats = new UIUtils.Console(MSG_W + SKIL_W, 0, STAT_W, STAT_H, "Stats", panel);
         }
 
-        stats.writeString(1, 1, player.name + " - " + player.desc);
-        stats.writeString(1, 2, "HP: " + player.getHp() + "/" + player.getMaxHp());
-        stats.writeString(1, 3, "Atk: " + player.getAtk());
-        stats.writeString(1, 4, "Dfp: " + player.getDfp());
-        stats.writeString(1, 5, "Will: " + player.getWil());
+        stats.writeString(1, 1, player.name);
+        stats.writeString(1, 2, player.desc);
+        stats.writeString(1, 3, gameState.getCurMap().getName() + " " + player.getPos());
+        stats.writeString(1, 4, "HP: " + player.getHp() + "/" + player.getMaxHp());
+        stats.writeString(1, 5, "Atk: " + player.getAtk());
+        stats.writeString(1, 6, "Dfp: " + player.getDfp());
+        stats.writeString(1, 7, "Will: " + player.getWil());
 
         stats.border();
         //TODO: rest of Stats
@@ -181,7 +183,7 @@ public class PlayView extends GameView {
                 .collect(Collectors.toList());
 
         for (Entity e : toDraw) {
-            if (inView(e.getPos())) {
+            if (inView(e.getPos()) && gameState.player.canSee(e)) {
                 final var screenPoint = gameState.getCurMap().mapToScreen(e.getPos(), centerPoint, MAP_SCREEN);
                 panel.setCodePointAt(screenPoint.x, screenPoint.y, e.glyph);
                 panel.setForegroundAt(screenPoint.x, screenPoint.y, Color.WHITE);

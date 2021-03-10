@@ -15,6 +15,18 @@ table:
     spd: 3
     ai: CAST
     freq: 10
+  lichen:
+    glyph: f
+    color: 0,96,0
+    name: lichen
+    desc: A brightly-colored fungus growing on stone.
+    hp: 5
+    atk: 0
+    dfp: 0
+    weakness: FIRE
+    spd: 1
+    ai: WAIT
+    freq: 5
   wolf:
     glyph: w
     color: 121,101,97
@@ -23,12 +35,95 @@ table:
     hp: 25
     damType: PHYSICAL
     atk: 10
-    dfp: 4
+    dfp: 5
     spd: 5
     ai: HUNT
+    level: 1
     freq: 8
+  spider:
+    glyph: i
+    color: 128,0,128
+    name: spider
+    desc: An eight-legged, oversized arachnid.
+    hp: 20
+    atk: 7
+    dfp: 6
+    spd: 7
+    ai: HUNT
+    level: 1
+    freq: 6
+  lesserEarthElemental:
+    glyph: e
+    color: 121,101,97
+    name: lesser earth elemental
+    desc: A rough-hewn, animated statue.
+    hp: 45
+    atk: 8
+    dfp: 10
+    spd: 2
+    will: 5
+    ai: HUNT
+    level: 2
+    damType: EARTH
+    weakness: LIGHTNING
+    freq: 5
+  lesserFireElemental:
+    glyph: e
+    color: 128,0,0
+    name: lesser fire elemental
+    desc: A dancing, man-shaped flame.
+    hp: 30
+    atk: 15
+    dfp: 5
+    spd: 5
+    ai: HUNT
+    level: 2
+    damType: FIRE
+    weakness: ICE
+    freq: 5
+  lesserIceElemental:
+    glyph: e
+    color: 0,0,128
+    name: lesser ice elemental
+    desc: A slender, animate statue of ice with blades for hands.
+    hp: 35
+    atk: 13
+    dfp: 7
+    spd: 5
+    will: 2
+    ai: HUNT
+    level: 2
+    damType: ICE
+    weakness: FIRE
+    freq: 5
+  lesserLightningElemental:
+    glyph: e
+    color: 128,128,0
+    name: lesser lightning elemental
+    desc: A ball lightning with a sinister face.
+    hp: 20
+    atk: 15
+    spd: 10
+    ai: HUNT
+    level: 2
+    damType: LIGHTNING
+    weakness: EARTH
+    freq: 5
+  greaterShadow:
+    glyph: D
+    color: 64,0,64
+    name: greater shadow
+    desc: An empty void, filled with malevolence.
+    hp: 50
+    atk: 20
+    spd: 20
+    will: 15
+    ai: HUNT
+    level: 3
+    damType: DARK
+    weakness: LIGHT
   player:
-    color: 188,188,0
+    color: 94,0,94
     desc: The player
     hp: 30
     damType: PHYSICAL
