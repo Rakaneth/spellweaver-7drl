@@ -1,19 +1,16 @@
 package com.rakaneth.entity;
 
-import com.rakaneth.engine.effect.Effect;
+import com.rakaneth.engine.action.GameAction;
 import com.rakaneth.interfaces.Vision;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class Actor extends Entity implements Vision {
 
     protected double[][] visibleTiles;
     protected double vision = 6.0;
     protected int nrg = 0;
+    private GameAction currentAction;
 
     //Constructors
     public Actor(char glyph, String name, String desc, Color color) {
@@ -34,6 +31,8 @@ public class Actor extends Entity implements Vision {
     public double getVision() {
         return vision;
     }
+    public int getNrg() { return nrg; }
+    public GameAction getCurrentAction() { return currentAction; }
 
     //Mutators
     public void setVisible(double[][] visiTiles) {
@@ -44,9 +43,16 @@ public class Actor extends Entity implements Vision {
         this.vision = vision;
     }
 
+    public void setCurrentAction(GameAction action) { this.currentAction = action; }
+
+    public void setNrg(int nrg) { this.nrg = nrg; }
+
+    //Utilities
     public boolean canSee(Entity other) {
         final var otherPos = other.getPos();
         return isVisible(otherPos.x, otherPos.y);
     }
+
+    public boolean canAct() { return this.nrg > 0; }
 
 }
