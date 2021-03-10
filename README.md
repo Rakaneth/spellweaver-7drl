@@ -83,3 +83,8 @@ have proper stats, can receive damage, be healed, and can have
   `Will` also affects the hero's spellcasting.
 *  `hp`: Hit points, dead at 0
 
+Added a `MessageDispatcher` class to send messages to the `GameState`
+without needing to pass it around like a football. 
+
+Also added a `Poison` effect and changed some of the plumbing on `Effects`
+to make messaging regarding them easier.

@@ -1,7 +1,7 @@
 package com.rakaneth.engine.effect;
 
 import com.rakaneth.engine.DamageTypes;
-import com.rakaneth.entity.Entity;
+import com.rakaneth.entity.Combatant;
 import com.rakaneth.interfaces.Vitals;
 
 public class InstantDamage extends Effect {
@@ -15,7 +15,7 @@ public class InstantDamage extends Effect {
     }
 
     @Override
-    protected void onExpire(Entity entity) {
+    protected void onExpire(Combatant entity) {
         ((Vitals) entity).takeDamage(amt, element);
     }
 }

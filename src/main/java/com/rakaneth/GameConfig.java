@@ -1,7 +1,9 @@
 package com.rakaneth;
 
 import com.rakaneth.engine.GameState;
+import com.rakaneth.engine.MessageDispatcher;
 import com.rakaneth.engine.effect.Buff;
+import com.rakaneth.engine.effect.Poison;
 import com.rakaneth.map.MapBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,7 @@ public final class GameConfig {
 
     public static GameState newGame() {
         final var state = new GameState(0xDEADBEEF, 0xDEADBEEF);
+        MessageDispatcher.create(state);
         final var gmap = new MapBuilder(75, 50, state.mapRNG)
                 .withCarvers(0, 2, 1)
                 .withWaterPct(5)
@@ -45,7 +48,6 @@ public final class GameConfig {
         final var player = state.player;
         final var pos = player.getPos();
         player.moveTo(state.getCurMap().getRandomFloor());
-        player.addEffect(new Buff("Strength", 50, 5, 0, 0));
         player.setMapId("test");
         player.setVisible(new double[vw][vh]);
         player.updateFOV(state.getCurMap(), player.getPos());

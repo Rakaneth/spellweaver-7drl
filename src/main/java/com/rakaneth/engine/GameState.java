@@ -1,5 +1,6 @@
 package com.rakaneth.engine;
 
+import com.rakaneth.entity.Combatant;
 import com.rakaneth.entity.Entity;
 import com.rakaneth.entity.EntityFactory;
 import com.rakaneth.entity.Player;
@@ -11,6 +12,7 @@ import squidpony.squidmath.IRNG;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GameState implements Serializable {
     public final Player player;
@@ -20,7 +22,7 @@ public class GameState implements Serializable {
     private final Map<String, GameMap> maps = new HashMap<>();
     private String curMapId;
     public transient final EntityFactory entityFactory;
-
+    public final List<String> messages = new ArrayList<>();
 
     //Constructors
     //must seed both or none
@@ -55,6 +57,17 @@ public class GameState implements Serializable {
 
     public void setCurMap(String mapId) {
         curMapId = mapId;
+    }
+
+    public void addMessage(String message) {
+        messages.add(message);
+    }
+
+    public void tick(int ticks) {
+        getCurrentEntities().stream()
+                .filter(e -> e instanceof Combatant)
+                .map(e -> (Combatant)e)
+                .forEach(e -> e.tick(ticks));
     }
 
     //Utilities

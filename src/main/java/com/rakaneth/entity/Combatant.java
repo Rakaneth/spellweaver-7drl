@@ -2,9 +2,14 @@ package com.rakaneth.entity;
 
 import com.rakaneth.engine.DamageTypes;
 import com.rakaneth.engine.effect.Buff;
+import com.rakaneth.engine.effect.Effect;
 import com.rakaneth.interfaces.Vitals;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Combatant extends Actor implements Vitals {
     protected int hp;
@@ -14,6 +19,7 @@ public class Combatant extends Actor implements Vitals {
     protected int wil;
     protected DamageTypes weakness;
     protected DamageTypes resistance;
+    protected List<Effect> effects = new ArrayList<>();
 
     //Constructors
     public Combatant(char glyph, String name, String desc, Color color) {
@@ -41,6 +47,10 @@ public class Combatant extends Actor implements Vitals {
 
     public DamageTypes getResistance() {
         return resistance;
+    }
+
+    public List<Effect> getEffects() {
+        return effects;
     }
 
     //Mutators
@@ -89,6 +99,27 @@ public class Combatant extends Actor implements Vitals {
 
     public void heal(int amt) {
         setHp(amt + hp);
+    }
+
+    public void tick(int ticks) {
+        for (Effect e : effects) {
+            e.tick(this, ticks);
+        }
+        effects = effects.stream()
+                .filter(e -> !e.isExpired())
+                .collect(Collectors.toList());
+    }
+
+    public void removeEffect(String name) {
+        effects = effects.stream()
+                .filter(e -> !e.name.equals(name))
+                .collect(Collectors.toList());
+    }
+
+    public Optional<Effect> getEffect(String effName) {
+        return effects.stream()
+                .filter(e -> e.name.equals(effName))
+                .findFirst();
     }
 
     //Utilities

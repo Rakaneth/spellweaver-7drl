@@ -4,10 +4,12 @@ import com.rakaneth.GameConfig;
 import com.rakaneth.engine.DamageTypes;
 import com.rakaneth.engine.GameState;
 import com.rakaneth.engine.effect.Effect;
+import com.rakaneth.engine.effect.Poison;
 import com.rakaneth.entity.Entity;
 import com.valkryst.VTerminal.component.VPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import squidpony.StringKit;
 import squidpony.squidgrid.Direction;
 import squidpony.squidmath.Coord;
 
@@ -62,6 +64,10 @@ public class PlayView extends GameView {
             case KeyEvent.VK_L -> gameState = GameConfig.loadGame();
             case KeyEvent.VK_UP -> player.heal(1);
             case KeyEvent.VK_DOWN -> player.takeDamage(1, DamageTypes.PHYSICAL);
+            case KeyEvent.VK_T -> gameState.tick(1);
+            case KeyEvent.VK_P -> new Poison(1, 10).apply(player);
+            case KeyEvent.VK_R -> gameState.addMessage("This is a really long string, meant to test wrapping");
+            case KeyEvent.VK_X -> gameState.addMessage("This is a shorter string to test the game log.");
             default -> logger.info("Unhandled key: {} ({})", key.getKeyChar(), key.getKeyCode());
         }
         player.updateFOV(gameState.getCurMap(), player.getPos());
@@ -117,6 +123,22 @@ public class PlayView extends GameView {
     private void renderMessages(VPanel panel) {
         if (msgs == null) {
             msgs = new UIUtils.Console(0, MAP_H, MSG_W, MSG_H, "Messages", panel);
+        }
+
+        int i = 1;
+        java.util.List<String> wrapt;
+        String nextMsg;
+        int wsz;
+        final var iterator = gameState.messages.listIterator(gameState.messages.size());
+        while (iterator.hasPrevious()) {
+            nextMsg = iterator.previous();
+            wrapt = StringKit.wrap(nextMsg, msgs.width-2);
+            wsz = wrapt.size();
+            if (i + wsz > 9) break;
+            for (int w=0; w<wsz; w++) {
+                msgs.writeString(1, i + w, wrapt.get(w));
+            }
+            i += wsz;
         }
         msgs.border();
         //TODO: rest of messages
