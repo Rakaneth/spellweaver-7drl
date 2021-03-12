@@ -4,6 +4,8 @@ import com.rakaneth.engine.AI;
 import com.rakaneth.engine.DamageTypes;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CreatureBuilder {
 
@@ -21,6 +23,7 @@ public class CreatureBuilder {
     private DamageTypes damType = DamageTypes.PHYSICAL;
     private int spd = 0;
     private AI ai = AI.HUNT;
+    private java.util.List<DamageTypes> knownElements = new ArrayList<>();
 
     public CreatureBuilder withHp(int amt) {
         hp = amt;
@@ -92,6 +95,11 @@ public class CreatureBuilder {
         return this;
     }
 
+    public CreatureBuilder withKnownElements(DamageTypes... elements) {
+        knownElements = Arrays.asList(elements);
+        return this;
+    }
+
     private void preBuild(Combatant newCombatant) {
         newCombatant.setBaseAtk(atk);
         newCombatant.setBaseDfp(dfp);
@@ -115,6 +123,8 @@ public class CreatureBuilder {
     public Player buildPlayer() {
         final var newPlayer = new Player(name, desc, color);
         preBuild(newPlayer);
+        newPlayer.changePower(newPlayer.getMaxPower());
+        newPlayer.getKnownElements().addAll(knownElements);
         return newPlayer;
     }
 }

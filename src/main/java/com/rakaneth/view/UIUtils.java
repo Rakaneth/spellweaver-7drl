@@ -10,6 +10,10 @@ public final class UIUtils {
         }
     }
 
+     public static String displayBoundedStat(int min, int max) {
+        return String.format("%d/%d", min, max);
+     }
+
     public static class Console {
         public final int width;
         public final int height;

@@ -9,7 +9,7 @@ public class DamageOverTime extends Effect{
     protected int lastAmtTaken;
 
     public DamageOverTime(String name, DamageTypes element, int amt, int duration) {
-        super(name, duration);
+        super(name, duration, true);
         this.element = element;
         this.amt = amt;
     }

@@ -39,8 +39,8 @@ public class Main {
                 System.exit(0);
             } else {
                 SwingUtilities.invokeLater(() -> {
-                    state.update();
-                    stack.handle(e);
+                    boolean update = stack.handle(e);
+                    if (update) state.update();
                     stack.render(panel);
                 });
             }

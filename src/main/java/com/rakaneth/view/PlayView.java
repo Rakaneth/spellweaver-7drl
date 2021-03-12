@@ -1,20 +1,17 @@
 package com.rakaneth.view;
 
 import com.rakaneth.GameConfig;
+import com.rakaneth.Swatch;
 import com.rakaneth.engine.DamageTypes;
 import com.rakaneth.engine.GameState;
-import com.rakaneth.engine.action.GameAction;
-import com.rakaneth.engine.action.MoveAction;
-import com.rakaneth.engine.action.NoAction;
-import com.rakaneth.engine.effect.Armor;
+import com.rakaneth.engine.action.*;
 import com.rakaneth.engine.effect.Effect;
-import com.rakaneth.engine.effect.Poison;
-import com.rakaneth.engine.effect.Weapon;
 import com.rakaneth.entity.Entity;
 import com.valkryst.VTerminal.component.VPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import squidpony.StringKit;
+import squidpony.squidai.AOE;
 import squidpony.squidgrid.Direction;
 import squidpony.squidmath.Coord;
 
@@ -27,12 +24,15 @@ import java.util.stream.Collectors;
 
 import static com.rakaneth.GameConfig.*;
 import static com.rakaneth.Swatch.*;
+import static com.rakaneth.view.UIUtils.displayBoundedStat;
 
 public class PlayView extends GameView {
     private UIUtils.Console msgs;
     private UIUtils.Console skills;
     private UIUtils.Console info;
     private UIUtils.Console stats;
+    private Coord target;
+    private DrawMode curMode = DrawMode.NORMAL;
 
     public PlayView(GameState gameState) {
         super(gameState);
@@ -54,36 +54,91 @@ public class PlayView extends GameView {
         renderAbilities(panel);
         renderStats(panel);
         renderInfo(panel);
+        if (curMode == DrawMode.TARGETING) {
+            if (target == null) target = gameState.player.getPos();
+            gameState.player.getSpell().setTarget(target);
+            final var aoe = gameState.player.getSpell().cast().aoe;
+            renderTargeting(panel, aoe);
+        }
         renderEntities(panel);
     }
 
     @Override
-    void handle(KeyEvent key) {
+    boolean handle(KeyEvent key) {
         //TODO: handle keypresses
         final var player = gameState.player;
         final var moveUp =  player.getPos().translate(Direction.UP);
         final var moveDown = player.getPos().translate(Direction.DOWN);
         final var moveLeft = player.getPos().translate(Direction.LEFT);
         final var moveRight = player.getPos().translate(Direction.RIGHT);
-        final GameAction action = switch (key.getKeyCode()) {
-            case KeyEvent.VK_W -> new MoveAction(player, moveUp);
-            case KeyEvent.VK_S -> new MoveAction(player, moveDown);
-            case KeyEvent.VK_A -> new MoveAction(player, moveLeft);
-            case KeyEvent.VK_D -> new MoveAction(player, moveRight);
-            default -> {
-                logger.info("Unhandled key: {} ({})", key.getKeyChar(), key.getKeyCode());
-                yield new NoAction(player);
+        final var code = key.getKeyCode();
+        boolean update = true;
+        if (curMode == DrawMode.TARGETING) {
+            final var moveTargetUp = target.translate(Direction.UP);
+            final var moveTargetDown = target.translate(Direction.DOWN);
+            final var moveTargetLeft = target.translate(Direction.LEFT);
+            final var moveTargetRight = target.translate(Direction.RIGHT);
+            target = switch(code) {
+                case KeyEvent.VK_W -> moveTargetUp;
+                case KeyEvent.VK_S -> moveTargetDown;
+                case KeyEvent.VK_A -> moveTargetLeft;
+                case KeyEvent.VK_D -> moveTargetRight;
+                case KeyEvent.VK_ENTER -> {
+                    curMode = DrawMode.NORMAL;
+                    yield target;
+                }
+                default -> target;
+            };
+            //gameState.player.getSpell().setTarget(target);
+            update = false;
+        } else {
+            final GameAction action = switch (code) {
+                case KeyEvent.VK_W -> new MoveAction(player, moveUp);
+                case KeyEvent.VK_S -> new MoveAction(player, moveDown);
+                case KeyEvent.VK_A -> new MoveAction(player, moveLeft);
+                case KeyEvent.VK_D -> new MoveAction(player, moveRight);
+                case KeyEvent.VK_1 -> new CastAction(player, player.getKnownElement(0));
+                case KeyEvent.VK_2 -> new CastAction(player, player.getKnownElement(1));
+                case KeyEvent.VK_3 -> new CastAction(player, player.getKnownElement(2));
+                case KeyEvent.VK_4 -> new CastAction(player, player.getKnownElement(3));
+                case KeyEvent.VK_ENTER -> {
+                    curMode = DrawMode.TARGETING;
+                    update = false;
+                    yield new NoAction(player);
+                }
+                //new FinishSpellAction(player, player.getSpell().getActionCost());
+                default -> {
+                    logger.info("Unhandled key: {} ({})", key.getKeyChar(), key.getKeyCode());
+                    update = false;
+                    yield new NoAction(player);
+                }
+            };
+            final int cost = action.doAction(gameState) + 100;
+            if (update) {
+                player.changeNrg(-cost);
+                logger.info(
+                        "Turn: {} Actor {} acted, spending {}, has {} energy",
+                        gameState.getGameTurn(),
+                        player.name,
+                        cost,
+                        player.getNrg());
+                player.updateFOV(gameState.getCurMap(), player.getPos());
             }
-        };
-        final int cost = action.doAction(gameState) + 100;
-        player.changeNrg(-cost);
-        logger.info(
-                "Turn: {} Actor {} acted, spending {}, has {} energy",
-                gameState.getGameTurn(),
-                player.name,
-                cost,
-                player.getNrg());
-        player.updateFOV(gameState.getCurMap(), player.getPos());
+        }
+
+        return update;
+    }
+
+    private void drawCharAdjusted(VPanel panel, Coord mapCoord, char c, Color fg, Color bg) {
+        if (inView(mapCoord)) {
+            final Coord screenPoint = gameState.getCurMap()
+                    .mapToScreen(mapCoord, gameState.player.getPos(), MAP_SCREEN);
+            final int x = screenPoint.x;
+            final int y = screenPoint.y;
+            panel.setCodePointAt(x, y, c);
+            panel.setForegroundAt(x, y, fg);
+            panel.setBackgroundAt(x, y, bg);
+        }
     }
 
     private boolean inView(Coord c) {
@@ -162,6 +217,13 @@ public class PlayView extends GameView {
             skills = new UIUtils.Console(MSG_W, MAP_H, SKIL_W, SKIL_H, "Magic", panel);
         }
 
+        final var player = gameState.player;
+
+        for (int i=0; i<player.getKnownElements().size(); i++) {
+            String toWrite = String.format("%d) %s", i+1, player.getKnownElement(i).toString());
+            skills.writeString(1, i+1, toWrite);
+        }
+
         skills.border();
         //TODO: rest of skills
     }
@@ -175,11 +237,12 @@ public class PlayView extends GameView {
         stats.writeString(1, 1, player.name);
         stats.writeString(1, 2, player.desc);
         stats.writeString(1, 3, gameState.getCurMap().getName() + " " + player.getPos());
-        stats.writeString(1, 4, "HP: " + player.getHp() + "/" + player.getMaxHp());
-        stats.writeString(1, 5, "Atk: " + player.getAtk());
-        stats.writeString(1, 6, "Dfp: " + player.getDfp());
-        stats.writeString(1, 7, "Spd: " + player.getSpd());
-        stats.writeString(1, 8, "Will: " + player.getWil());
+        stats.writeString(1, 4, "HP: " + displayBoundedStat(player.getHp(), player.getMaxHp()));
+        stats.writeString (1, 5, "Power: " + displayBoundedStat(player.getPower(), player.getMaxPower()));
+        stats.writeString(1, 7, "Atk: " + player.getAtk());
+        stats.writeString(1, 8, "Dfp: " + player.getDfp());
+        stats.writeString(1, 9, "Spd: " + player.getSpd());
+        stats.writeString(1, 10, "Will: " + player.getWil());
 
 
         stats.border();
@@ -199,12 +262,8 @@ public class PlayView extends GameView {
 
         for (Entity e : toDraw) {
             if (inView(e.getPos()) && gameState.player.canSee(e)) {
-                final var screenPoint = gameState.getCurMap().mapToScreen(e.getPos(), centerPoint, MAP_SCREEN);
-                panel.setCodePointAt(screenPoint.x, screenPoint.y, e.glyph);
-                panel.setForegroundAt(screenPoint.x, screenPoint.y, Color.WHITE);
-                if (e.color != Color.BLACK) {
-                    panel.setBackgroundAt(screenPoint.x, screenPoint.y, e.color);
-                }
+                final Color color = e.color == Color.BLACK ? FLOOR_BG : e.color;
+                drawCharAdjusted(panel, e.getPos(), e.glyph, Color.WHITE, color);
             }
         }
     }
@@ -220,6 +279,15 @@ public class PlayView extends GameView {
         }
 
         info.border();
+    }
+
+    private void renderTargeting(VPanel panel, AOE aoe) {
+        final var toDraw = aoe.findArea();
+
+        toDraw.keySet().forEach(c -> {
+            drawCharAdjusted(panel, c, 'X', Color.CYAN, Color.BLACK);
+        });
+        drawCharAdjusted(panel, target, 'X', Color.YELLOW, Color.BLACK);
     }
 
     enum DrawMode {NORMAL, TARGETING}

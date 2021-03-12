@@ -9,7 +9,7 @@ public class InstantDamage extends Effect {
     private DamageTypes element;
 
     public InstantDamage(int amt, DamageTypes element) {
-        super("damage", Effect.INSTANT);
+        super("damage", Effect.INSTANT, true);
         this.amt = amt;
         this.element = element;
     }

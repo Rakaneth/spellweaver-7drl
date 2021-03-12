@@ -8,7 +8,7 @@ public class Fear extends Effect{
     private AI prevAI;
 
     public Fear(Combatant source, int duration) {
-        super("Fear", duration);
+        super("Fear", duration, true);
         this.source = source;
     }
 

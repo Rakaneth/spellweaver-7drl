@@ -3,14 +3,16 @@ package com.rakaneth.engine;
 import com.rakaneth.engine.effect.Effect;
 import com.rakaneth.entity.Combatant;
 import squidpony.squidai.AOE;
+import squidpony.squidai.LineAOE;
 import squidpony.squidai.PointAOE;
 import squidpony.squidai.Technique;
 import squidpony.squidmath.Coord;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Spell {
+public class Spell implements Serializable {
     private Technique tech;
     private DamageTypes baseElement;
     private SpellState state;
@@ -21,17 +23,21 @@ public class Spell {
     private int radius = 1;
     private Coord origin;
     private Coord target;
-    private List<SpellEffect> spellEffects = new ArrayList<>();
+    private final List<SpellEffect> spellEffects = new ArrayList<>();
+    private final List<DamageTypes> elements = new ArrayList<>();
+    private int actionCost = 10;
+    private char[][] tileMap;
 
     public Spell(char[][] tileMap) {
         tech = new Technique(
                 "player",
                 "Spellweaving",
-                new PointAOE(Coord.get(0, 0), 1, 1));
+                new PointAOE(Coord.get(0, 0)));
         tech.setMap(tileMap);
         state = SpellState.BASE;
         this.baseCost = 0;
         this.cost = 0;
+        this.tileMap = tileMap;
     }
 
     //Getters
@@ -59,6 +65,10 @@ public class Spell {
         return cost;
     }
 
+    public SpellState getSpellState() { return state; }
+
+    public int getActionCost() { return actionCost; }
+
     //Mutators
     public void setOrigin(Coord origin) {
         this.origin = origin;
@@ -66,9 +76,10 @@ public class Spell {
 
     public void setTarget(Coord target) {
         this.target = target;
+        tech.aoe.shift(target);
     }
 
-    public void charge(DamageTypes element, boolean skip) {
+    public void charge(boolean skip) {
         state = state.update(skip);
     }
 
@@ -84,6 +95,10 @@ public class Spell {
         this.cost = cost;
     }
 
+    public void changeCost(int amt) { cost += amt; }
+
+    public void multiplyCost(double amt) { cost *= amt; }
+
     public void setBaseCost(int baseCost) {
         this.baseCost = baseCost;
     }
@@ -96,16 +111,27 @@ public class Spell {
         this.range = range;
     }
 
-    public void setMap(char[][] tileMap) {
+    public void setMap() {
         this.tech.setMap(tileMap);
+    }
+
+    public void setTileMap(char[][] tileMap) {
+        this.tileMap = tileMap;
     }
 
     public void setPotency(int potency) {
         this.potency = potency;
     }
 
+    public void changePotency(int amt) { potency += amt;}
+
     public void addSpellEffect(Combatant target, Effect effect) {
         spellEffects.add(new SpellEffect(target, effect));
+    }
+    public void addElement(DamageTypes element) { this.elements.add(element); }
+
+    public int getRange() {
+        return range;
     }
 
     public static class SpellEffect {

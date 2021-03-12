@@ -1,5 +1,6 @@
 package com.rakaneth.entity;
 
+import com.rakaneth.engine.DamageTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import squidpony.squidmath.IRNG;
@@ -74,6 +75,11 @@ public final class EntityFactory {
         final var bp = creatures.table.get("player");
         return preCreatureBuild(bp)
                 .withName(playerName)
+                .withKnownElements(
+                        DamageTypes.FIRE,
+                        DamageTypes.ICE,
+                        DamageTypes.LIGHTNING,
+                        DamageTypes.EARTH)
                 .buildPlayer();
     }
 

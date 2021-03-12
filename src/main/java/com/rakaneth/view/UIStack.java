@@ -29,8 +29,8 @@ final public class UIStack {
         panel.repaint();
     }
 
-    public void handle(KeyEvent key) {
-        viewStack.peek().handle(key);
+    public boolean handle(KeyEvent key) {
+        return viewStack.peek().handle(key);
     }
 
     public void pop() {

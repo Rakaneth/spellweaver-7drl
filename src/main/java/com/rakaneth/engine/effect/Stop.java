@@ -4,7 +4,7 @@ import com.rakaneth.entity.Combatant;
 
 public class Stop extends Effect {
     public Stop() {
-        super("Stop", Effect.INSTANT);
+        super("Stop", Effect.INSTANT, true);
     }
 
     @Override

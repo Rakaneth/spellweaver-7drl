@@ -81,6 +81,7 @@ public class GameState implements Serializable {
     public void setCurMap(String mapId) {
         curMapId = mapId;
         resetQueue();
+        player.resetSpell(getCurMap().getTiles());
     }
 
     public void addMessage(String message) {

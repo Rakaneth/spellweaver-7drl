@@ -12,10 +12,16 @@ abstract public class Effect implements Serializable {
     public static final int INSTANT = 0;
     public final String name;
     protected String modifier = "";
+    public final boolean isDebuff;
 
-    public Effect(String name, int duration) {
+    public Effect(String name, int duration, boolean isDebuff) {
         this.name = name;
         this.duration = duration;
+        this.isDebuff = isDebuff;
+    }
+
+    public Effect(String name, int duration) {
+        this(name, duration, false);
     }
 
     protected void onTick(Combatant entity, int ticks) {

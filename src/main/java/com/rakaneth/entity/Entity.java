@@ -8,7 +8,7 @@ import java.awt.*;
 import java.io.Serializable;
 
 public class Entity implements Serializable {
-    private Coord position = Coord.get(0, 0);
+    protected Coord position = Coord.get(0, 0);
     public final String name;
     public final String desc;
     private String mapId = "none";

@@ -34,16 +34,20 @@ public class ActorQueue implements Serializable {
         int lastCost = 10;
         while (true) {
             curActor = actors.get(0);
-            if (curActor.getNrg() < 0) curActor.changeNrg(curActor.getSpd());
+            if (curActor.getNrg() < 0) {
+                curActor.changeNrg(curActor.getSpd());
+                logger.info(
+                        "Turn {}: Actor {} getting {} energy, has {}",
+                        state.getGameTurn(),
+                        curActor.name,
+                        curActor.getSpd(),
+                        curActor.getNrg());
+            }
+
             if (!(curActor instanceof Sentinel)) {
                 curActor.updateFOV(state.getCurMap(), curActor.getPos());
             }
-            logger.info(
-                    "Turn {}: Actor {} getting {} energy, has {}",
-                    state.getGameTurn(),
-                    curActor.name,
-                    curActor.getSpd(),
-                    curActor.getNrg());
+
             while (curActor.getNrg() >= 0 ) {
                 if (curActor instanceof Player) return;
                 GameAction curAction = curActor.getAI().chooseAction(curActor, state);
