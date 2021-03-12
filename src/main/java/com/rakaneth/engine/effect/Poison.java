@@ -8,6 +8,7 @@ import com.rakaneth.entity.Player;
 public class Poison extends DamageOverTime{
     public Poison(int amt, int duration) {
         super("Poison", DamageTypes.EARTH, amt, duration);
+        modifier = String.valueOf(amt) + " stacks";
     }
 
     @Override
@@ -29,6 +30,7 @@ public class Poison extends DamageOverTime{
     protected void onMerge(Effect effect, Combatant entity) {
         //Poison stacks intensity and resets duration
         amt += ((Poison)effect).amt;
+        modifier = String.valueOf(amt) + " stacks";
         duration = Math.max(effect.duration, duration);
         if (entity instanceof Player) {
             MessageDispatcher.getInstance().gameMessage(entity.name + "'s poison worsens!");

@@ -17,13 +17,13 @@ public final class GameConfig {
     public final static int GAME_H = 40;
     public final static int MAP_W = 60;
     public final static int MAP_H = 30;
-    public final static int MSG_W = 30;
+    public final static int MSG_W = 40;
     public final static int MSG_H = 10;
     public final static int SKIL_W = 30;
     public final static int SKIL_H = 10;
-    public final static int INFO_W = 40;
+    public final static int INFO_W = 30;
     public final static int INFO_H = 10;
-    public final static int STAT_W = 40;
+    public final static int STAT_W = 30;
     public final static int STAT_H = 30;
     public final static Coord MAP_SCREEN = Coord.get(MAP_W, MAP_H);
     public final static String saveFile = System.getProperty("user.home")

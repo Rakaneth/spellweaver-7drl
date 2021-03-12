@@ -20,6 +20,12 @@ public class Fear extends Effect{
     }
 
     @Override
+    protected void onMerge(Effect effect, Combatant entity) {
+        //Fear stacks duration
+        this.duration += effect.duration;
+    }
+
+    @Override
     protected void onExpire(Combatant entity) {
         entity.setAI(prevAI);
         super.onExpire(entity);

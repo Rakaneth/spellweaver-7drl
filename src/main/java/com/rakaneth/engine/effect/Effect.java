@@ -11,6 +11,7 @@ abstract public class Effect implements Serializable {
     public static final int INFINITE = -1;
     public static final int INSTANT = 0;
     public final String name;
+    protected String modifier = "";
 
     public Effect(String name, int duration) {
         this.name = name;
@@ -26,7 +27,7 @@ abstract public class Effect implements Serializable {
     protected void onExpire(Combatant entity) {
         if (entity instanceof Player)
             MessageDispatcher.getInstance().gameMessage(name + " has ended.");
-    } //what happens when expires - use this for instant effects
+    } //what happens when expires
 
     protected void onMerge(Effect effect, Combatant entity) { //what happens when receiving an effect of the same type
         //default behavior is to overwrite duration
@@ -65,6 +66,7 @@ abstract public class Effect implements Serializable {
 
     @Override
     public String toString() {
-        return name + "(" + duration + ")";
+        String mod = modifier.isEmpty() ? "" : ": " + modifier;
+        return name + mod + " (" + duration + ")";
     }
 }

@@ -4,6 +4,7 @@ import com.rakaneth.engine.GameState;
 import com.rakaneth.entity.Actor;
 import com.rakaneth.entity.Combatant;
 import com.rakaneth.entity.Entity;
+import com.rakaneth.entity.Player;
 import squidpony.squidmath.Coord;
 
 import java.util.Optional;
@@ -22,7 +23,13 @@ public class MoveAction extends GameAction {
         Optional<Entity> blocker;
         if (state.isBlocked(to)) {
             blocker = state.getBlockerAt(to);
-            return blocker.map(entity -> new BumpAttackAction(actor, (Combatant) entity));
+            if (blocker.isPresent()) {
+                return Optional.of(new BumpAttackAction(actor, (Combatant)blocker.get()));
+            } else if (actor instanceof Player && state.getCurMap().isClosedDoor(to)) {
+                return Optional.of(new DoorOpenAction(actor, to));
+            } else {
+                return Optional.empty();
+            }
         }
         actor.moveTo(to);
         cost = (int)(state.getCurMap().getCost(to) * 10);

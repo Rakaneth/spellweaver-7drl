@@ -103,3 +103,12 @@ Scheduling system is in. It isn't perfect, but here we are at day 6 and
 it seems to work. 
 
 Bump combat is finally in, as are `Weapon` and `Armor` effects.
+
+* `Weapon` - empowers bump attacks, granting them power and an element
+* `Armor` - strengthens defense and grants resistance to an element
+
+For the 7DRL, these are the closest things to equipment I have time to 
+implement. I think it's more thematic this way, anyway.
+
+Tweaked the appearance of effects to show modifications, like the number
+of poison stacks or the element an `Armor` or `Weapon` buff is keyed to.

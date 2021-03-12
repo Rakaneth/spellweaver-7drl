@@ -70,14 +70,6 @@ public class PlayView extends GameView {
             case KeyEvent.VK_S -> new MoveAction(player, moveDown);
             case KeyEvent.VK_A -> new MoveAction(player, moveLeft);
             case KeyEvent.VK_D -> new MoveAction(player, moveRight);
-            case KeyEvent.VK_E -> {
-                new Armor(10, 10, DamageTypes.EARTH).apply(player);
-                yield new NoAction(player);
-            }
-            case KeyEvent.VK_F -> {
-                new Weapon(10, 10, DamageTypes.FIRE).apply(player);
-                yield new NoAction(player);
-            }
             default -> {
                 logger.info("Unhandled key: {} ({})", key.getKeyChar(), key.getKeyCode());
                 yield new NoAction(player);
@@ -186,7 +178,9 @@ public class PlayView extends GameView {
         stats.writeString(1, 4, "HP: " + player.getHp() + "/" + player.getMaxHp());
         stats.writeString(1, 5, "Atk: " + player.getAtk());
         stats.writeString(1, 6, "Dfp: " + player.getDfp());
-        stats.writeString(1, 7, "Will: " + player.getWil());
+        stats.writeString(1, 7, "Spd: " + player.getSpd());
+        stats.writeString(1, 8, "Will: " + player.getWil());
+
 
         stats.border();
         //TODO: rest of Stats

@@ -3,6 +3,7 @@ package com.rakaneth.map;
 import squidpony.squidai.DijkstraMap;
 import squidpony.squidgrid.FOV;
 import squidpony.squidgrid.LOS;
+import squidpony.squidgrid.mapping.DungeonUtility;
 import squidpony.squidmath.Coord;
 import squidpony.squidmath.GreasedRegion;
 import squidpony.squidmath.IRNG;
@@ -99,10 +100,15 @@ public class GameMap implements Serializable {
     //Mutators
     public void setTile(int x, int y, char t) {
         tiles[x][y] = t;
+        DungeonUtility.generateSimpleResistances(tiles);
     }
 
     public void setTile(Coord c, char t) {
         setTile(c.x, c.y, t);
+    }
+
+    public void openDoor(Coord door) {
+        setTile(door, '/');
     }
 
     public void connect(Coord from, Coord to, String mapId) {
@@ -163,5 +169,8 @@ public class GameMap implements Serializable {
         return explored.contains(curPoint);
     }
 
+    public boolean isClosedDoor(Coord c) {
+        return getTile(c).orElse('\0') == '+';
+    }
 
 }

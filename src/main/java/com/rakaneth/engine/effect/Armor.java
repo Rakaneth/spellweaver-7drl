@@ -13,6 +13,7 @@ public class Armor extends Buff{
     public Armor(int dfp, int duration, DamageTypes element) {
         super("Armor", duration, 0, dfp, 0, 0);
         this.element = element;
+        this.modifier = element.toString();
     }
 
     @Override

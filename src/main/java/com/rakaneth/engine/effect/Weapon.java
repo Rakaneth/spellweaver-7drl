@@ -12,6 +12,7 @@ public class Weapon extends Buff{
     public Weapon(int atk, int duration, DamageTypes element) {
         super("Weapon", duration, atk, 0, 0, 0);
         this.element = element;
+        this.modifier = element.toString();
     }
 
     @Override
