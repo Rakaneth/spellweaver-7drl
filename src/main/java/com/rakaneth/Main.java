@@ -38,9 +38,9 @@ public class Main {
                 GameConfig.saveGame(state);
                 System.exit(0);
             } else {
-                state.update();
-                stack.handle(e);
                 SwingUtilities.invokeLater(() -> {
+                    state.update();
+                    stack.handle(e);
                     stack.render(panel);
                 });
             }

@@ -6,8 +6,10 @@ import com.rakaneth.engine.GameState;
 import com.rakaneth.engine.action.GameAction;
 import com.rakaneth.engine.action.MoveAction;
 import com.rakaneth.engine.action.NoAction;
+import com.rakaneth.engine.effect.Armor;
 import com.rakaneth.engine.effect.Effect;
 import com.rakaneth.engine.effect.Poison;
+import com.rakaneth.engine.effect.Weapon;
 import com.rakaneth.entity.Entity;
 import com.valkryst.VTerminal.component.VPanel;
 import org.slf4j.Logger;
@@ -68,6 +70,14 @@ public class PlayView extends GameView {
             case KeyEvent.VK_S -> new MoveAction(player, moveDown);
             case KeyEvent.VK_A -> new MoveAction(player, moveLeft);
             case KeyEvent.VK_D -> new MoveAction(player, moveRight);
+            case KeyEvent.VK_E -> {
+                new Armor(10, 10, DamageTypes.EARTH).apply(player);
+                yield new NoAction(player);
+            }
+            case KeyEvent.VK_F -> {
+                new Weapon(10, 10, DamageTypes.FIRE).apply(player);
+                yield new NoAction(player);
+            }
             default -> {
                 logger.info("Unhandled key: {} ({})", key.getKeyChar(), key.getKeyCode());
                 yield new NoAction(player);

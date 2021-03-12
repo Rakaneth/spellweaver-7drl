@@ -18,6 +18,7 @@ public class CreatureBuilder {
     private double vision = 6.0;
     private DamageTypes weakness = DamageTypes.NONE;
     private DamageTypes resistance = DamageTypes.NONE;
+    private DamageTypes damType = DamageTypes.PHYSICAL;
     private int spd = 0;
     private AI ai = AI.HUNT;
 
@@ -86,6 +87,11 @@ public class CreatureBuilder {
         return this;
     }
 
+    public CreatureBuilder withDamageType(DamageTypes element) {
+        this.damType = element;
+        return this;
+    }
+
     private void preBuild(Combatant newCombatant) {
         newCombatant.setBaseAtk(atk);
         newCombatant.setBaseDfp(dfp);
@@ -97,6 +103,7 @@ public class CreatureBuilder {
         newCombatant.setResistance(resistance);
         newCombatant.setSpd(spd);
         newCombatant.setAI(ai);
+        newCombatant.setDamageType(damType);
     }
 
     public Combatant buildMonster() {

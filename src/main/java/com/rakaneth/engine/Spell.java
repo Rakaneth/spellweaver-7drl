@@ -1,9 +1,14 @@
 package com.rakaneth.engine;
 
+import com.rakaneth.engine.effect.Effect;
+import com.rakaneth.entity.Combatant;
 import squidpony.squidai.AOE;
 import squidpony.squidai.PointAOE;
 import squidpony.squidai.Technique;
 import squidpony.squidmath.Coord;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Spell {
     private Technique tech;
@@ -16,6 +21,7 @@ public class Spell {
     private int radius = 1;
     private Coord origin;
     private Coord target;
+    private List<SpellEffect> spellEffects = new ArrayList<>();
 
     public Spell(char[][] tileMap) {
         tech = new Technique(
@@ -96,6 +102,20 @@ public class Spell {
 
     public void setPotency(int potency) {
         this.potency = potency;
+    }
+
+    public void addSpellEffect(Combatant target, Effect effect) {
+        spellEffects.add(new SpellEffect(target, effect));
+    }
+
+    public static class SpellEffect {
+        public final Combatant target;
+        public final Effect effect;
+
+        public SpellEffect(Combatant target, Effect effect) {
+            this.target = target;
+            this.effect = effect;
+        }
     }
 
 }

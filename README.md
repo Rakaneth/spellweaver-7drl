@@ -81,6 +81,7 @@ have proper stats, can receive damage, be healed, and can have
 * `dfp`: defense power, how well it absorbs damage
 * `will`: mental fortitude, the ability to resist things like `Fear` and `Stun`.
   `Will` also affects the hero's spellcasting.
+* `spd`: General speed, how fast it moves
 *  `hp`: Hit points, dead at 0
 
 Added a `MessageDispatcher` class to send messages to the `GameState`
@@ -100,3 +101,5 @@ Some new creatures got added to the creatures.yml file.
 ### 3.11 ###
 Scheduling system is in. It isn't perfect, but here we are at day 6 and
 it seems to work. 
+
+Bump combat is finally in, as are `Weapon` and `Armor` effects.

@@ -2,6 +2,7 @@ package com.rakaneth.engine.action;
 
 import com.rakaneth.engine.GameState;
 import com.rakaneth.entity.Actor;
+import com.rakaneth.entity.Combatant;
 import com.rakaneth.entity.Entity;
 import squidpony.squidmath.Coord;
 
@@ -21,7 +22,7 @@ public class MoveAction extends GameAction {
         Optional<Entity> blocker;
         if (state.isBlocked(to)) {
             blocker = state.getBlockerAt(to);
-            return blocker.map(entity -> new BumpAttackAction(actor, entity));
+            return blocker.map(entity -> new BumpAttackAction(actor, (Combatant) entity));
         }
         actor.moveTo(to);
         cost = (int)(state.getCurMap().getCost(to) * 10);

@@ -56,9 +56,12 @@ public class ActorQueue implements Serializable {
                         lastCost,
                         curActor.getNrg());
             }
+            state.cleanup();
             Collections.rotate(actors, 1);
         }
     }
+
+
 
     public void add(Actor e) {
         actors.add(e);

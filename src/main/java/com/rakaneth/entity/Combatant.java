@@ -17,6 +17,7 @@ public class Combatant extends Actor implements Vitals {
     protected int atk;
     protected int dfp;
     protected int wil;
+    protected DamageTypes damageType = DamageTypes.PHYSICAL;
     protected DamageTypes weakness;
     protected DamageTypes resistance;
     protected List<Effect> effects = new ArrayList<>();
@@ -48,6 +49,8 @@ public class Combatant extends Actor implements Vitals {
     public DamageTypes getResistance() {
         return resistance;
     }
+
+    public DamageTypes getDamageType() { return damageType;}
 
     public List<Effect> getEffects() {
         return effects;
@@ -85,6 +88,9 @@ public class Combatant extends Actor implements Vitals {
     public void setResistance(DamageTypes resist) {
         resistance = resist;
     }
+
+    public void setDamageType(DamageTypes dmg) { damageType = dmg;}
+
 
     @Override
     public void takeDamage(int amt, DamageTypes element) {

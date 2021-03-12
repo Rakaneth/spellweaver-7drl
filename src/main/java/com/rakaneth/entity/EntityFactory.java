@@ -62,6 +62,7 @@ public final class EntityFactory {
                 .withVision(bp.vision)
                 .withHp(bp.hp)
                 .withSpd(bp.spd)
+                .withDamageType(bp.damType)
                 .withAI(bp.ai);
     }
 

@@ -15,21 +15,11 @@ public class SentinelAction extends GameAction {
         super(actor, 0);
     }
 
-
     @Override
     public Optional<GameAction> perform(GameState state) {
         state.tick(1);
         state.incrementGameClock();
-        final var toRemove = state.getCurrentEntities()
-                .stream()
-                .filter(e -> e instanceof Combatant)
-                .filter(e -> !(e instanceof Player))
-                .filter(e -> !((Combatant)e).isAlive())
-                .map(e -> (Combatant)e)
-                .toArray(Entity[]::new);
-
-        state.removeEntities(toRemove);
-
+        state.cleanup();
         return Optional.empty();
     }
 }

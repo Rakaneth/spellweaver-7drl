@@ -142,4 +142,15 @@ public class GameState implements Serializable {
     }
 
 
+    public void cleanup() {
+        final var toRemove = getCurrentEntities()
+                .stream()
+                .filter(e -> e instanceof Combatant)
+                .filter(e -> !(e instanceof Player))
+                .filter(e -> !((Combatant)e).isAlive())
+                .map(e -> (Combatant)e)
+                .toArray(Entity[]::new);
+
+        removeEntities(toRemove);
+    }
 }
