@@ -51,6 +51,10 @@ abstract public class Effect implements Serializable {
         }
     }
 
+    public void remove(Combatant entity) {
+        onExpire(entity);
+    }
+
     public void merge(Effect effect, Combatant entity) {
         this.onMerge(effect, entity);
     }

@@ -44,14 +44,13 @@ public final class GameConfig {
                 .withCreature("greaterShadow")
                 .build();
         state.addMaps(gmap);
+        final var player = state.player;
+        player.setMapId("test");
         state.setCurMap("test");
         final var curMap = state.getCurMap();
         final var vw = curMap.getWidth();
         final var vh = curMap.getHeight();
-        final var player = state.player;
-        final var pos = player.getPos();
         player.moveTo(state.getCurMap().getRandomFloor());
-        player.setMapId("test");
         player.setVisible(new double[vw][vh]);
         player.updateFOV(state.getCurMap(), player.getPos());
 

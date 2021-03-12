@@ -1,5 +1,8 @@
 package com.rakaneth.map;
 
+import squidpony.squidai.DijkstraMap;
+import squidpony.squidgrid.FOV;
+import squidpony.squidgrid.LOS;
 import squidpony.squidmath.Coord;
 import squidpony.squidmath.GreasedRegion;
 import squidpony.squidmath.IRNG;
@@ -33,7 +36,8 @@ public class GameMap implements Serializable {
     double[][] resistances;
     final private IRNG rng;
     final private Map<Coord, Connection> connections = new HashMap<>();
-    final private String blockers = "#~+";
+    DijkstraMap dmap;
+    double[][] costs;
 
     GameMap(IRNG rng) {
         this.rng = rng;
@@ -42,6 +46,18 @@ public class GameMap implements Serializable {
     //Getters
     public Optional<Character> getTile(int x, int y) {
         return inBounds(x, y) ? Optional.of(tiles[x][y]) : Optional.empty();
+    }
+
+    public double getCost(int x, int y) {
+        return costs[x][y];
+    }
+
+    public double getCost(Coord c) {
+        return getCost(c.x, c.y);
+    }
+
+    public DijkstraMap getDMap() {
+        return dmap;
     }
 
     public Optional<Character> getTile(Coord c) {
@@ -108,6 +124,7 @@ public class GameMap implements Serializable {
 
     public boolean isBlocking(int x, int y) {
         final var t = getTile(x, y);
+        String blockers = "#+";
         return t.isEmpty() || blockers.indexOf(t.get()) > -1;
     }
 
@@ -145,5 +162,6 @@ public class GameMap implements Serializable {
     public boolean isExplored(Coord curPoint) {
         return explored.contains(curPoint);
     }
+
 
 }

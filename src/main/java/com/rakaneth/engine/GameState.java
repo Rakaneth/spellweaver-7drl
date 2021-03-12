@@ -1,9 +1,6 @@
 package com.rakaneth.engine;
 
-import com.rakaneth.entity.Combatant;
-import com.rakaneth.entity.Entity;
-import com.rakaneth.entity.EntityFactory;
-import com.rakaneth.entity.Player;
+import com.rakaneth.entity.*;
 import com.rakaneth.map.GameMap;
 import squidpony.squidmath.Coord;
 import squidpony.squidmath.GWTRNG;
@@ -23,6 +20,8 @@ public class GameState implements Serializable {
     private String curMapId;
     public transient final EntityFactory entityFactory;
     public final List<String> messages = new ArrayList<>();
+    private int gameTurns = 0;
+    private final ActorQueue queue = new ActorQueue();
 
     //Constructors
     //must seed both or none
@@ -43,6 +42,7 @@ public class GameState implements Serializable {
     }
 
     //Getters
+    public int getGameTurn() { return gameTurns;}
 
     //Mutators
     public void addMaps(GameMap... maps) {
@@ -51,12 +51,36 @@ public class GameState implements Serializable {
         }
     }
 
+    public void incrementGameClock() { gameTurns++;}
+
     public void addEntities(Entity... entities) {
         this.entities.addAll(Arrays.asList(entities));
     }
 
+    public void removeEntities(Entity... entities) {
+        for (Iterator<Entity> i = Arrays.stream(entities).iterator(); i.hasNext();) {
+            Entity e = i.next();
+            this.entities.remove(e);
+            if (e instanceof Actor) {
+                this.queue.remove((Actor)e);
+            }
+        }
+    }
+
+    public void resetQueue() {
+        queue.reset(getCurrentActors());
+    }
+
+    private List<Actor> getCurrentActors() {
+        return getCurrentEntities().stream()
+                .filter(e -> e instanceof Actor)
+                .map(e -> (Actor) e)
+                .collect(Collectors.toList());
+    }
+
     public void setCurMap(String mapId) {
         curMapId = mapId;
+        resetQueue();
     }
 
     public void addMessage(String message) {
@@ -68,6 +92,10 @@ public class GameState implements Serializable {
                 .filter(e -> e instanceof Combatant)
                 .map(e -> (Combatant)e)
                 .forEach(e -> e.tick(ticks));
+    }
+
+    public void update() {
+        queue.update(this);
     }
 
     //Utilities
@@ -108,5 +136,10 @@ public class GameState implements Serializable {
     public boolean isBlocked(final Coord c) {
         return isBlocked(c, curMapId);
     }
+
+    public boolean canSeePlayer(Actor entity) {
+        return entity.canSee(player);
+    }
+
 
 }

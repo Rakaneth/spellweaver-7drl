@@ -5,6 +5,8 @@ import com.rakaneth.entity.Combatant;
 import com.rakaneth.entity.EntityFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import squidpony.squidai.DijkstraMap;
+import squidpony.squidgrid.Measurement;
 import squidpony.squidgrid.mapping.DungeonGenerator;
 import squidpony.squidgrid.mapping.DungeonUtility;
 import squidpony.squidgrid.mapping.SerpentMapGenerator;
@@ -13,6 +15,7 @@ import squidpony.squidmath.IRNG;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MapBuilder {
     private boolean lit = false;
@@ -121,6 +124,12 @@ public class MapBuilder {
         }
 
         final char[][] tiles = dgn.generate(baseDungeon);
+        DungeonUtility.closeDoors(tiles);
+
+        final Map<Character, Double> costs = Map.of(
+                '~', 3.0,
+                ',', 1.5
+        );
 
         freshMap.lit = lit;
         freshMap.id = id;
@@ -128,17 +137,25 @@ public class MapBuilder {
         freshMap.tiles = tiles;
         freshMap.floors = new GreasedRegion(tiles, '.');
         freshMap.temp = new GreasedRegion(freshMap.floors);
-        freshMap.resistances = DungeonUtility.generateResistances(tiles);
+        freshMap.resistances = DungeonUtility.generateSimpleResistances(tiles);
         freshMap.explored = new GreasedRegion(freshMap.getWidth(), freshMap.getHeight());
+        freshMap.costs = DungeonUtility.generateCostMap(tiles, costs, 1.0);
+        freshMap.dmap = new DijkstraMap(tiles, Measurement.MANHATTAN, rng);
+        freshMap.dmap.costMap = freshMap.costs;
+        final int mw = freshMap.getWidth();
+        final int mh = freshMap.getHeight();
 
         if (creatureMax > 0) {
             final var numCreatures = rng.nextInt(creatureMax);
             logger.info("Attempting to build {} creatures on map {}", numCreatures, freshMap.name);
             Combatant newCreature;
+
             for (int i=0; i<numCreatures; i++) {
                 newCreature = ef.randomMonster(creatureLevel);
                 newCreature.moveTo(freshMap.getRandomFloor());
                 newCreature.setMapId(freshMap.id);
+                newCreature.setVisible(new double[mw][mh]);
+                newCreature.updateFOV(freshMap, newCreature.getPos());
                 state.addEntities(newCreature);
                 logger.info("Placing new {} on map {} at {}", newCreature.name, freshMap.name, newCreature.getPos());
             }
@@ -148,6 +165,8 @@ public class MapBuilder {
             pickedCreature = ef.monsterFromString(buildID);
             pickedCreature.moveTo(freshMap.getRandomFloor());
             pickedCreature.setMapId(freshMap.id);
+            pickedCreature.setVisible(new double[mw][mh]);
+            pickedCreature.updateFOV(freshMap, pickedCreature.getPos());
             state.addEntities(pickedCreature);
             logger.info(
                     "Placing chosen creature {} on map {} at {}",

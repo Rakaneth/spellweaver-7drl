@@ -96,3 +96,7 @@ but I like the idea of having everything the map needs to function
 in the builder.
 
 Some new creatures got added to the creatures.yml file.
+
+### 3.11 ###
+Scheduling system is in. It isn't perfect, but here we are at day 6 and
+it seems to work. 

@@ -12,8 +12,8 @@ table:
     dfp: 1
     weakness: ICE
     resistance: FIRE
-    spd: 3
-    ai: CAST
+    spd: 13
+    ai: HUNT
     freq: 10
   lichen:
     glyph: f
@@ -24,7 +24,7 @@ table:
     atk: 0
     dfp: 0
     weakness: FIRE
-    spd: 1
+    spd: 11
     ai: WAIT
     freq: 5
   wolf:
@@ -36,7 +36,7 @@ table:
     damType: PHYSICAL
     atk: 10
     dfp: 5
-    spd: 5
+    spd: 15
     ai: HUNT
     level: 1
     freq: 8
@@ -48,7 +48,7 @@ table:
     hp: 20
     atk: 7
     dfp: 6
-    spd: 7
+    spd: 17
     ai: HUNT
     level: 1
     freq: 6
@@ -60,7 +60,7 @@ table:
     hp: 45
     atk: 8
     dfp: 10
-    spd: 2
+    spd: 12
     will: 5
     ai: HUNT
     level: 2
@@ -75,7 +75,7 @@ table:
     hp: 30
     atk: 15
     dfp: 5
-    spd: 5
+    spd: 15
     ai: HUNT
     level: 2
     damType: FIRE
@@ -89,7 +89,7 @@ table:
     hp: 35
     atk: 13
     dfp: 7
-    spd: 5
+    spd: 15
     will: 2
     ai: HUNT
     level: 2
@@ -103,7 +103,7 @@ table:
     desc: A ball lightning with a sinister face.
     hp: 20
     atk: 15
-    spd: 10
+    spd: 20
     ai: HUNT
     level: 2
     damType: LIGHTNING
@@ -116,7 +116,7 @@ table:
     desc: An empty void, filled with malevolence.
     hp: 50
     atk: 20
-    spd: 20
+    spd: 30
     will: 15
     ai: HUNT
     level: 3
@@ -130,5 +130,5 @@ table:
     atk: 1
     dfp: 1
     will: 5
-    spd: 5
+    spd: 13
 

@@ -110,10 +110,12 @@ public class Combatant extends Actor implements Vitals {
                 .collect(Collectors.toList());
     }
 
-    public void removeEffect(String name) {
-        effects = effects.stream()
-                .filter(e -> !e.name.equals(name))
-                .collect(Collectors.toList());
+    public void removeEffect(String effName) {
+        final var maybeEff = getEffect(effName);
+        maybeEff.ifPresent(eff -> {
+           eff.remove(this);
+           effects.remove(eff);
+        });
     }
 
     public Optional<Effect> getEffect(String effName) {
@@ -148,5 +150,15 @@ public class Combatant extends Actor implements Vitals {
                 .sum();
 
         return wil + wilBuffs;
+    }
+
+    @Override
+    public int getSpd() {
+        int spdBuffs = effects.stream()
+                .filter(e -> e instanceof Buff)
+                .mapToInt(e -> ((Buff)e).spd)
+                .sum();
+
+        return spd + spdBuffs;
     }
 }

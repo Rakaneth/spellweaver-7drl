@@ -16,8 +16,8 @@ public class BumpAttackAction extends GameAction {
     }
 
     @Override
-    Optional<GameAction> perform(GameState state) {
-        //TODO: implement bump attack
+    public Optional<GameAction> perform(GameState state) {
+        state.addMessage(actor.name + " bumps " + defender.name);
         return Optional.empty();
     }
 }

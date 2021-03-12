@@ -60,7 +60,9 @@ public final class EntityFactory {
                 .withWeakness(bp.weakness)
                 .withResistance(bp.resistance)
                 .withVision(bp.vision)
-                .withHp(bp.hp);
+                .withHp(bp.hp)
+                .withSpd(bp.spd)
+                .withAI(bp.ai);
     }
 
     private Combatant monsterFromBP(CreatureBlueprint bp) {

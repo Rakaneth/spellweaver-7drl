@@ -1,5 +1,6 @@
 package com.rakaneth.entity;
 
+import com.rakaneth.engine.AI;
 import com.rakaneth.engine.DamageTypes;
 
 public class CreatureBlueprint extends Blueprint {
@@ -13,7 +14,7 @@ public class CreatureBlueprint extends Blueprint {
     public int spd = 0;
     public DamageTypes weakness = null;
     public DamageTypes resistance = null;
-    public String ai = "hunt";
+    public AI ai = AI.HUNT;
     public String name = "No name";
     public String desc = "No desc";
     public double vision = 6.0;

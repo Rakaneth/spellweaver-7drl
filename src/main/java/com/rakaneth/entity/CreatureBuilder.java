@@ -1,5 +1,6 @@
 package com.rakaneth.entity;
 
+import com.rakaneth.engine.AI;
 import com.rakaneth.engine.DamageTypes;
 
 import java.awt.*;
@@ -17,6 +18,8 @@ public class CreatureBuilder {
     private double vision = 6.0;
     private DamageTypes weakness = DamageTypes.NONE;
     private DamageTypes resistance = DamageTypes.NONE;
+    private int spd = 0;
+    private AI ai = AI.HUNT;
 
     public CreatureBuilder withHp(int amt) {
         hp = amt;
@@ -73,6 +76,16 @@ public class CreatureBuilder {
         return this;
     }
 
+    public CreatureBuilder withSpd(int spd) {
+        this.spd = spd;
+        return this;
+    }
+
+    public CreatureBuilder withAI(AI ai) {
+        this.ai = ai;
+        return this;
+    }
+
     private void preBuild(Combatant newCombatant) {
         newCombatant.setBaseAtk(atk);
         newCombatant.setBaseDfp(dfp);
@@ -82,6 +95,8 @@ public class CreatureBuilder {
         newCombatant.setHp(hp);
         newCombatant.setWeakness(weakness);
         newCombatant.setResistance(resistance);
+        newCombatant.setSpd(spd);
+        newCombatant.setAI(ai);
     }
 
     public Combatant buildMonster() {

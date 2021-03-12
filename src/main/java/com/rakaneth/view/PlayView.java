@@ -3,6 +3,9 @@ package com.rakaneth.view;
 import com.rakaneth.GameConfig;
 import com.rakaneth.engine.DamageTypes;
 import com.rakaneth.engine.GameState;
+import com.rakaneth.engine.action.GameAction;
+import com.rakaneth.engine.action.MoveAction;
+import com.rakaneth.engine.action.NoAction;
 import com.rakaneth.engine.effect.Effect;
 import com.rakaneth.engine.effect.Poison;
 import com.rakaneth.entity.Entity;
@@ -56,20 +59,28 @@ public class PlayView extends GameView {
     void handle(KeyEvent key) {
         //TODO: handle keypresses
         final var player = gameState.player;
-        switch (key.getKeyCode()) {
-            case KeyEvent.VK_W -> player.moveDir(Direction.UP);
-            case KeyEvent.VK_S -> player.moveDir(Direction.DOWN);
-            case KeyEvent.VK_A -> player.moveDir(Direction.LEFT);
-            case KeyEvent.VK_D -> player.moveDir(Direction.RIGHT);
-            case KeyEvent.VK_L -> gameState = GameConfig.loadGame();
-            case KeyEvent.VK_UP -> player.heal(1);
-            case KeyEvent.VK_DOWN -> player.takeDamage(1, DamageTypes.PHYSICAL);
-            case KeyEvent.VK_T -> gameState.tick(1);
-            case KeyEvent.VK_P -> new Poison(1, 10).apply(player);
-            case KeyEvent.VK_R -> gameState.addMessage("This is a really long string, meant to test wrapping");
-            case KeyEvent.VK_X -> gameState.addMessage("This is a shorter string to test the game log.");
-            default -> logger.info("Unhandled key: {} ({})", key.getKeyChar(), key.getKeyCode());
-        }
+        final var moveUp =  player.getPos().translate(Direction.UP);
+        final var moveDown = player.getPos().translate(Direction.DOWN);
+        final var moveLeft = player.getPos().translate(Direction.LEFT);
+        final var moveRight = player.getPos().translate(Direction.RIGHT);
+        final GameAction action = switch (key.getKeyCode()) {
+            case KeyEvent.VK_W -> new MoveAction(player, moveUp);
+            case KeyEvent.VK_S -> new MoveAction(player, moveDown);
+            case KeyEvent.VK_A -> new MoveAction(player, moveLeft);
+            case KeyEvent.VK_D -> new MoveAction(player, moveRight);
+            default -> {
+                logger.info("Unhandled key: {} ({})", key.getKeyChar(), key.getKeyCode());
+                yield new NoAction(player);
+            }
+        };
+        final int cost = action.doAction(gameState) + 100;
+        player.changeNrg(-cost);
+        logger.info(
+                "Turn: {} Actor {} acted, spending {}, has {} energy",
+                gameState.getGameTurn(),
+                player.name,
+                cost,
+                player.getNrg());
         player.updateFOV(gameState.getCurMap(), player.getPos());
     }
 
@@ -141,7 +152,7 @@ public class PlayView extends GameView {
             i += wsz;
         }
         msgs.border();
-        //TODO: rest of messages
+        //DONE: rest of messages
     }
 
     private void renderAbilities(VPanel panel) {
