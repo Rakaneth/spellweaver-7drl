@@ -4,7 +4,7 @@ This is the 7DRL version of the game, so bugs certainly abound.
 
 ## Libraries ##
 * [VTerminal](https://github.com/Valkryst/VTerminal) - graphics
-* [SquidLib](httpsL//github.com/yellowstonegames/SquidLib) - roguelike utilities
+* [SquidLib](https://github.com/yellowstonegames/SquidLib) - roguelike utilities
 * [snakeyaml](https://bitbucket.org/asomov/snakeyaml/src/master/) - YAML parsing
 
 ## Game Premise ##
