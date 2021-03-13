@@ -112,3 +112,16 @@ implement. I think it's more thematic this way, anyway.
 
 Tweaked the appearance of effects to show modifications, like the number
 of poison stacks or the element an `Armor` or `Weapon` buff is keyed to.
+
+### 3.12 ###
+Cutting it very close. Spellcasting is in, but is likely to have a lot of
+bugs, as it took me the whole week to figure out how to get this in.
+
+Implemented a `DiceRoller` singleton class with access to one of the game's RNGs
+(two are used, one for generating the map and the other for combat - 
+the idea is to allow for seeded runs without also fixing combat luck).
+This is done to avoid having to pass the whole `GameState` around.
+
+Saving broke at the last moment after implementing spells, and I don't have
+time to fix it before the deadline, so I will leave it out of the 7drl 
+build.

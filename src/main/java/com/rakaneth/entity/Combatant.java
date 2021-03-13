@@ -93,7 +93,7 @@ public class Combatant extends Actor implements Vitals {
 
 
     @Override
-    public void takeDamage(int amt, DamageTypes element) {
+    public int takeDamage(int amt, DamageTypes element) {
         int dmg = amt;
         if (element == weakness) {
             dmg *= 1.5; //weakness is 150% dmg
@@ -101,10 +101,15 @@ public class Combatant extends Actor implements Vitals {
             dmg /= 2; //resistance is half dmg
         }
         hp -= dmg;
+        return dmg;
     }
 
-    public void heal(int amt) {
-        setHp(amt + hp);
+    // "Will save" against certain debuffs, DC 15
+    public void tryApplyEffect(Effect e, int roll) {
+        final var failed = !e.isDebuff || roll + getWil() < 15;
+        if (failed) {
+            e.apply(this);
+        }
     }
 
     public void tick(int ticks) {
@@ -122,6 +127,10 @@ public class Combatant extends Actor implements Vitals {
            eff.remove(this);
            effects.remove(eff);
         });
+    }
+
+    public void changeHp(int amt) {
+        setHp(amt + hp);
     }
 
     public Optional<Effect> getEffect(String effName) {

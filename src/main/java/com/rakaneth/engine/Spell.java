@@ -2,6 +2,7 @@ package com.rakaneth.engine;
 
 import com.rakaneth.engine.effect.Effect;
 import com.rakaneth.entity.Combatant;
+import com.rakaneth.interfaces.ApplyFromSpell;
 import squidpony.squidai.AOE;
 import squidpony.squidai.LineAOE;
 import squidpony.squidai.PointAOE;
@@ -23,7 +24,9 @@ public class Spell implements Serializable {
     private int radius = 1;
     private Coord origin;
     private Coord target;
-    private final List<SpellEffect> spellEffects = new ArrayList<>();
+    public final List<ApplyFromSpell<?>> goodEffects = new ArrayList<>();
+    public final List<ApplyFromSpell<?>> badEffects = new ArrayList<>();
+
     private final List<DamageTypes> elements = new ArrayList<>();
     private int actionCost = 10;
     private char[][] tileMap;
@@ -125,23 +128,17 @@ public class Spell implements Serializable {
 
     public void changePotency(int amt) { potency += amt;}
 
-    public void addSpellEffect(Combatant target, Effect effect) {
-        spellEffects.add(new SpellEffect(target, effect));
-    }
     public void addElement(DamageTypes element) { this.elements.add(element); }
 
     public int getRange() {
         return range;
     }
 
-    public static class SpellEffect {
-        public final Combatant target;
-        public final Effect effect;
-
-        public SpellEffect(Combatant target, Effect effect) {
-            this.target = target;
-            this.effect = effect;
-        }
+    public DamageTypes getBaseElement() {
+        return baseElement;
     }
 
+    public void changeActionCost(int amt) {
+        actionCost += amt;
+    }
 }

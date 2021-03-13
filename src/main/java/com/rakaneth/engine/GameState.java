@@ -120,18 +120,19 @@ public class GameState implements Serializable {
         return getEntitiesAt(c, curMapId);
     }
 
-    public Optional<Entity> getBlockerAt(final Coord c, final String mapId) {
+    public <T extends Entity> Optional<T> getBlockerAt(final Coord c, final String mapId, Class<T> klass) {
         return getEntitiesAt(c, mapId).stream()
                 .filter(e -> e.isBlocker)
-                .findFirst();
+                .findFirst()
+                .map(klass::cast);
     }
 
-    public Optional<Entity> getBlockerAt(final Coord c) {
-        return getBlockerAt(c, curMapId);
+    public <T extends Entity> Optional<T> getBlockerAt(final Coord c, Class<T> klass) {
+        return getBlockerAt(c, curMapId, klass);
     }
 
     public boolean isBlocked(final Coord c, final String mapId) {
-        return getBlockerAt(c, mapId).isPresent() || maps.get(mapId).isBlocking(c.x, c.y);
+        return getBlockerAt(c, mapId, Entity.class).isPresent() || maps.get(mapId).isBlocking(c.x, c.y);
     }
 
     public boolean isBlocked(final Coord c) {

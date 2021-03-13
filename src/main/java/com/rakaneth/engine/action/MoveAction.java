@@ -20,11 +20,11 @@ public class MoveAction extends GameAction {
 
     @Override
     public Optional<GameAction> perform(GameState state) {
-        Optional<Entity> blocker;
+        Optional<Combatant> blocker;
         if (state.isBlocked(to)) {
-            blocker = state.getBlockerAt(to);
+            blocker = state.getBlockerAt(to, Combatant.class);
             if (blocker.isPresent()) {
-                return Optional.of(new BumpAttackAction(actor, (Combatant)blocker.get()));
+                return Optional.of(new BumpAttackAction(actor, blocker.get()));
             } else if (actor instanceof Player && state.getCurMap().isClosedDoor(to)) {
                 return Optional.of(new DoorOpenAction(actor, to));
             } else {

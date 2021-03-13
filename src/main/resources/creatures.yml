@@ -50,6 +50,7 @@ table:
     dfp: 6
     spd: 17
     ai: HUNT
+    weakness: FIRE
     level: 1
     freq: 6
   lesserEarthElemental:

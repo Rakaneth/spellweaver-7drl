@@ -1,7 +1,10 @@
 package com.rakaneth.engine;
 
+import com.rakaneth.entity.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 
 public class MessageDispatcher {
     private static MessageDispatcher instance;
@@ -26,5 +29,11 @@ public class MessageDispatcher {
 
     public void gameMessage(String message) {
         gameState.addMessage(message);
+    }
+
+    public void msgIfPlayerCanSee(String message, Entity... entities) {
+        if(Arrays.stream(entities).anyMatch(gameState.player::canSee)) {
+            gameState.addMessage(message);
+        }
     }
 }

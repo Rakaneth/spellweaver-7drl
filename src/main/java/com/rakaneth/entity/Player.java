@@ -43,20 +43,24 @@ public class Player extends Combatant implements Caster {
     @Override
     public List<DamageTypes> getKnownElements() { return knownElements;}
 
-    //Mutators
-    public void changePower(int amt) {
-        power = MathExtras.clamp(power + amt, 0, getMaxPower());
-    }
+    @Override
     public void resetSpell(char[][] tiles) {
         spell = new Spell(tiles);
         spell.setOrigin(position);
         spell.setTarget(position);
     }
 
+    //Mutators
+    public void changePower(int amt) {
+        power = MathExtras.clamp(power + amt, 0, getMaxPower());
+    }
+
     //Utilities
     public DamageTypes getKnownElement(int idx) {
         return knownElements.get(idx);
     }
+
+
 
 
 

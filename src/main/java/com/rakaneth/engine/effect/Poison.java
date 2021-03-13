@@ -1,7 +1,6 @@
 package com.rakaneth.engine.effect;
 
 import com.rakaneth.engine.DamageTypes;
-import com.rakaneth.engine.MessageDispatcher;
 import com.rakaneth.entity.Combatant;
 import com.rakaneth.entity.Player;
 
@@ -15,14 +14,14 @@ public class Poison extends DamageOverTime{
     protected void onTick(Combatant entity, int ticks) {
         super.onTick(entity, ticks);
         if (entity instanceof Player) {
-            MessageDispatcher.getInstance().gameMessage(entity.name + " takes " + lastAmtTaken + " damage from poison!");
+            dispatcher.gameMessage(entity.name + " takes " + lastAmtTaken + " damage from poison!");
         }
     }
 
     @Override
     protected void onApply(Combatant entity) {
         if (entity instanceof Player) {
-            MessageDispatcher.getInstance().gameMessage(entity.name + " is poisoned!");
+            dispatcher.gameMessage(entity.name + " is poisoned!");
         }
     }
 
@@ -32,8 +31,6 @@ public class Poison extends DamageOverTime{
         amt += ((Poison)effect).amt;
         modifier = String.valueOf(amt) + " stacks";
         duration = Math.max(effect.duration, duration);
-        if (entity instanceof Player) {
-            MessageDispatcher.getInstance().gameMessage(entity.name + "'s poison worsens!");
-        }
+        dispatcher.msgIfPlayerCanSee(entity.name + "'s poison worsens!");
     }
 }

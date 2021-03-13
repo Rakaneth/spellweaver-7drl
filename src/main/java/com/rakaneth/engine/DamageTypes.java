@@ -1,11 +1,12 @@
 package com.rakaneth.engine;
 
-import squidpony.squidai.BlastAOE;
+import com.rakaneth.engine.effect.*;
+import squidpony.squidai.*;
 import squidpony.squidgrid.Radius;
 import squidpony.squidmath.Coord;
 
 public enum DamageTypes {
-    //TODO: finish baseline info
+    //DONE: finish baseline info
     FIRE(
             "@Name evoke$ an ember of flame!",
             "@Name empower$ the spell with fiery might!",
@@ -34,30 +35,33 @@ public enum DamageTypes {
     ) {
         @Override
         public void modifyThirdCast(Spell spell, Coord origin, Coord center, int radius, int range) {
-            //TODO: CloudAOE
+            spell.setAOE(
+                    new CloudAOE(spell.getTarget(), spell.getPotency(), Radius.DIAMOND, 1, spell.getRange()));
         }
 
         @Override
         public void modifySecondCast(Spell spell) {
-            //TODO: add slowing effect to spell, +2
+            spell.badEffects.add(new ApplySlowSpell());
         }
     },
     EARTH(
             "@Name conjure$ a shard of earth!",
-            "@Name encase$ @themself in elemental armor!",
-            "@Name bring% the gravity of earth to bear!",
+            "@Name encase$ @himself in elemental armor!",
+            "@Name forge$ the spell into a weapon!",
             1,
             1,
             1
     ) {
         @Override
         public void modifyThirdCast(Spell spell, Coord origin, Coord center, int radius, int range) {
-            //TODO: Weapon effect +1
+            spell.goodEffects.add(new ApplyWeaponSpell());
+            spell.changeActionCost(5);
         }
 
         @Override
         public void modifySecondCast(Spell spell) {
-            //TODO: grant shield effect to caster, +1
+            spell.goodEffects.add(new ApplyArmorSpell());
+            spell.changeActionCost(10);
         }
     },
     LIGHTNING(
@@ -70,12 +74,16 @@ public enum DamageTypes {
     ) {
         @Override
         public void modifyThirdCast(Spell spell, Coord origin, Coord center, int radius, int range) {
-            //TODO: BeamAOE
+            spell.setAOE(new LineAOE(
+                            spell.getOrigin(),
+                            spell.getTarget(),
+                            spell.getPotency(),
+                            Radius.DIAMOND, 1, spell.getPotency()));
         }
 
         @Override
         public void modifySecondCast(Spell spell) {
-            //TODO: cut cast time in half +3
+            spell.changeActionCost(-10);
         }
     },
     FORCE(
@@ -88,13 +96,15 @@ public enum DamageTypes {
     ) {
         @Override
         public void modifyThirdCast(Spell spell, Coord origin, Coord center, int radius, int range) {
-            //TODO: PointAOE, stop effect
+            spell.setAOE(new PointAOE(spell.getTarget()));
+            spell.badEffects.add(new ApplyStopSpell());
+            //DONE: PointAOE, stop effect
         }
 
         @Override
         public void modifySecondCast(Spell spell) {
             spell.multiplyCost(1.5);
-            //TODO: Potency doubled, cost * 1.5
+            //DONE: Potency doubled, cost * 1.5
         }
 
     },
@@ -108,12 +118,16 @@ public enum DamageTypes {
     ) {
         @Override
         public void modifyThirdCast(Spell spell, Coord origin, Coord center, int radius, int range) {
-            //TODO: BeamAOE
+            spell.setAOE(new BeamAOE(
+                            origin,
+                            spell.getTarget(),
+                            spell.getPotency(),
+                            Radius.DIAMOND));
         }
 
         @Override
         public void modifySecondCast(Spell spell) {
-            //TODO: Healing
+            spell.goodEffects.add(new ApplyRegenerateSpell());
         }
     },
     DARK(
@@ -127,12 +141,13 @@ public enum DamageTypes {
     ) {
         @Override
         public void modifyThirdCast(Spell spell, Coord origin, Coord center, int radius, int range) {
-            //TODO: BurstAOE
+            spell.setAOE(new BurstAOE(center, radius, Radius.DIAMOND, 1, range));
+            //DONE: BurstAOE
         }
 
         @Override
         public void modifySecondCast(Spell spell) {
-            //TODO: fear effect
+            spell.badEffects.add(new ApplyFearSpell());
         }
 
     }, PHYSICAL("", "", "", 0, 0, 0) {

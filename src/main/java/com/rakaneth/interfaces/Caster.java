@@ -2,6 +2,7 @@ package com.rakaneth.interfaces;
 
 import com.rakaneth.engine.DamageTypes;
 import com.rakaneth.engine.Spell;
+import com.rakaneth.engine.effect.ApplyDamageSpell;
 import squidpony.squidai.PointAOE;
 import squidpony.squidmath.Coord;
 
@@ -14,7 +15,10 @@ public interface Caster {
     public int getPotency();
     public int getPower();
     public int getMaxPower();
+    public void changePower(int amt);
     public List<DamageTypes> getKnownElements();
+    //public void setSpell(Spell spell);
+    public void resetSpell(char[][] tiles);
 
     default public void finish(Spell spell) {
         final var tech = spell.cast();
@@ -33,6 +37,7 @@ public interface Caster {
                 spell.setBaseElement(element);
                 spell.charge(false);
                 spell.addElement(element);
+                spell.badEffects.add(new ApplyDamageSpell());
             }
             case FIRST_MOD -> {
                 element.modifySecondCast(spell);

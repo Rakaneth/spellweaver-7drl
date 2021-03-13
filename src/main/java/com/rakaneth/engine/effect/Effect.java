@@ -2,7 +2,6 @@ package com.rakaneth.engine.effect;
 
 import com.rakaneth.engine.MessageDispatcher;
 import com.rakaneth.entity.Combatant;
-import com.rakaneth.entity.Player;
 
 import java.io.Serializable;
 
@@ -13,6 +12,7 @@ abstract public class Effect implements Serializable {
     public final String name;
     protected String modifier = "";
     public final boolean isDebuff;
+    protected MessageDispatcher dispatcher = MessageDispatcher.getInstance();
 
     public Effect(String name, int duration, boolean isDebuff) {
         this.name = name;
@@ -31,8 +31,7 @@ abstract public class Effect implements Serializable {
     } //what happens when applied
 
     protected void onExpire(Combatant entity) {
-        if (entity instanceof Player)
-            MessageDispatcher.getInstance().gameMessage(name + " has ended.");
+        dispatcher.msgIfPlayerCanSee(name + " has ended.", entity);
     } //what happens when expires
 
     protected void onMerge(Effect effect, Combatant entity) { //what happens when receiving an effect of the same type

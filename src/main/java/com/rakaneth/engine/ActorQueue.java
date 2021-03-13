@@ -12,7 +12,6 @@ import java.util.*;
 
 public class ActorQueue implements Serializable {
     private final List<Actor> actors;
-    private Actor curActor;
     private static final Logger logger = LoggerFactory.getLogger(ActorQueue.class);
 
     public ActorQueue(List<Actor> actors) {
@@ -33,7 +32,7 @@ public class ActorQueue implements Serializable {
     public void update(GameState state) {
         int lastCost = 10;
         while (true) {
-            curActor = actors.get(0);
+            Actor curActor = actors.get(0);
             if (curActor.getNrg() < 0) {
                 curActor.changeNrg(curActor.getSpd());
                 logger.info(

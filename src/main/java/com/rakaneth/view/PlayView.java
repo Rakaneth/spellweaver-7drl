@@ -73,24 +73,41 @@ public class PlayView extends GameView {
         final var moveRight = player.getPos().translate(Direction.RIGHT);
         final var code = key.getKeyCode();
         boolean update = true;
+        int cost = 0;
         if (curMode == DrawMode.TARGETING) {
             final var moveTargetUp = target.translate(Direction.UP);
             final var moveTargetDown = target.translate(Direction.DOWN);
             final var moveTargetLeft = target.translate(Direction.LEFT);
             final var moveTargetRight = target.translate(Direction.RIGHT);
             target = switch(code) {
-                case KeyEvent.VK_W -> moveTargetUp;
-                case KeyEvent.VK_S -> moveTargetDown;
-                case KeyEvent.VK_A -> moveTargetLeft;
-                case KeyEvent.VK_D -> moveTargetRight;
+                case KeyEvent.VK_W -> {
+                    update = false;
+                    yield moveTargetUp;
+                }
+                case KeyEvent.VK_S -> {
+                    update = false;
+                    yield moveTargetDown;
+                }
+                case KeyEvent.VK_A -> {
+                    update = false;
+                    yield moveTargetLeft;
+                }
+                case KeyEvent.VK_D -> {
+                    update = false;
+                    yield moveTargetRight;
+                }
                 case KeyEvent.VK_ENTER -> {
                     curMode = DrawMode.NORMAL;
+                    final var action = new FinishSpellAction(player, player.getSpell().getActionCost());
+                    cost = action.doAction(gameState) + 100;
                     yield target;
                 }
-                default -> target;
+                default -> {
+                    update = false;
+                    gameState.addMessage("(Press ENTER to choose your target, or a movement key to move the cursor.)");
+                    yield target;
+                }
             };
-            //gameState.player.getSpell().setTarget(target);
-            update = false;
         } else {
             final GameAction action = switch (code) {
                 case KeyEvent.VK_W -> new MoveAction(player, moveUp);
@@ -106,24 +123,24 @@ public class PlayView extends GameView {
                     update = false;
                     yield new NoAction(player);
                 }
-                //new FinishSpellAction(player, player.getSpell().getActionCost());
                 default -> {
                     logger.info("Unhandled key: {} ({})", key.getKeyChar(), key.getKeyCode());
                     update = false;
                     yield new NoAction(player);
                 }
             };
-            final int cost = action.doAction(gameState) + 100;
-            if (update) {
-                player.changeNrg(-cost);
-                logger.info(
-                        "Turn: {} Actor {} acted, spending {}, has {} energy",
-                        gameState.getGameTurn(),
-                        player.name,
-                        cost,
-                        player.getNrg());
-                player.updateFOV(gameState.getCurMap(), player.getPos());
-            }
+            cost = action.doAction(gameState) + 100;
+        }
+
+        if (update) {
+            player.changeNrg(-cost);
+            logger.info(
+                    "Turn: {} Actor {} acted, spending {}, has {} energy",
+                    gameState.getGameTurn(),
+                    player.name,
+                    cost,
+                    player.getNrg());
+            player.updateFOV(gameState.getCurMap(), player.getPos());
         }
 
         return update;
@@ -157,7 +174,7 @@ public class PlayView extends GameView {
         return gameState.player.getPos();
     }
 
-    //TODO: render functions
+    //DONE: render functions
     private void renderMap(VPanel panel) {
         final var centerPoint = centerPos();
         final var curMap = gameState.getCurMap();
@@ -219,13 +236,17 @@ public class PlayView extends GameView {
 
         final var player = gameState.player;
 
-        for (int i=0; i<player.getKnownElements().size(); i++) {
-            String toWrite = String.format("%d) %s", i+1, player.getKnownElement(i).toString());
-            skills.writeString(1, i+1, toWrite);
+        if (curMode == DrawMode.TARGETING) {
+            skills.writeString(1, 1, "Targeting your spell");
+        } else {
+            for (int i=0; i<player.getKnownElements().size(); i++) {
+                String toWrite = String.format("%d) %s", i+1, player.getKnownElement(i).toString());
+                skills.writeString(1, i+1, toWrite);
+            }
         }
 
         skills.border();
-        //TODO: rest of skills
+        //DONE: rest of skills
     }
 
     private void renderStats(VPanel panel) {
@@ -246,7 +267,7 @@ public class PlayView extends GameView {
 
 
         stats.border();
-        //TODO: rest of Stats
+        //DONE: rest of Stats
     }
 
     private void renderEntities(VPanel panel) {

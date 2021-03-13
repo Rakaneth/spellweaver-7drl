@@ -13,5 +13,5 @@ public interface Vitals {
         return getHp() > 0;
     }
 
-    void takeDamage(int amt, DamageTypes element);
+    int takeDamage(int amt, DamageTypes element);
 }

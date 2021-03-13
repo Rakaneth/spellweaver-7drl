@@ -1,5 +1,6 @@
 package com.rakaneth;
 
+import com.rakaneth.engine.DiceRoller;
 import com.rakaneth.engine.GameState;
 import com.rakaneth.engine.MessageDispatcher;
 import com.rakaneth.engine.effect.Buff;
@@ -32,6 +33,7 @@ public final class GameConfig {
     public static GameState newGame() {
         final var state = new GameState(0xDEADBEEF, 0xDEADBEEF);
         MessageDispatcher.create(state);
+        DiceRoller.create(state.gameRNG);
         final var gmap = new MapBuilder(75, 50, state.mapRNG, state.entityFactory, state)
                 .withCarvers(0, 2, 1)
                 .withWaterPct(5)
@@ -54,6 +56,7 @@ public final class GameConfig {
         player.setVisible(new double[vw][vh]);
         player.updateFOV(state.getCurMap(), player.getPos());
 
+        /* TODO later: debug saving
         File file = new File(saveFile);
 
         try {
@@ -69,10 +72,12 @@ public final class GameConfig {
         } catch (IOException e) {
             e.printStackTrace();
         }
+         */
 
         return state;
     }
 
+    /*
     public static void saveGame(GameState state) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(saveFile))) {
             out.writeObject(state);
@@ -95,4 +100,5 @@ public final class GameConfig {
         }
         return state;
     }
+     */
 }
