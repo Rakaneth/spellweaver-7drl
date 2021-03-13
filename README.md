@@ -39,6 +39,7 @@ The game is turn-based, as is standard. The world only moves when you do.
 * `X` - targeting UI assistance
 * `,` - shallow water(150% time to move through)
 * `~` - deep water (triple time to move through)
+* `?` - a spellbook, perhaps your master's
 
 ### Controls ###
 * `W, A, S, D` - movement (up, left, down, right respectively)
@@ -158,3 +159,7 @@ need randomness in a part of the engine with no direct access to the
 Saving broke at the last moment after implementing spells, and I don't have
 time to fix it before the deadline, so I will leave it out of the 7drl 
 build.
+
+Quite a lot of content got cut for the sake of finishing on time, but
+the game is technically winnable now. If there is enough interest
+on my part or others, I may hack on this later.

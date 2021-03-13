@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.rakaneth'
-version '0.23-PREVIEW'
+version '0.25-7DRL'
 
 repositories {
     mavenCentral()

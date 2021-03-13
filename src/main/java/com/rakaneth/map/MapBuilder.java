@@ -1,8 +1,11 @@
 package com.rakaneth.map;
 
+import com.rakaneth.engine.DamageTypes;
 import com.rakaneth.engine.GameState;
 import com.rakaneth.entity.Combatant;
 import com.rakaneth.entity.EntityFactory;
+import com.rakaneth.entity.MacGuffin;
+import com.rakaneth.entity.Spellbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import squidpony.squidai.DijkstraMap;
@@ -40,6 +43,8 @@ public class MapBuilder {
     private final GameState state;
     private final List<String> buildIDs = new ArrayList<>();
     private final List<ConnectionInfo> connections = new ArrayList<>();
+    private Spellbook spellBook;
+    private MacGuffin mcg;
 
     private static class ConnectionInfo {
         public final Character toChar;
@@ -115,6 +120,16 @@ public class MapBuilder {
 
     public MapBuilder withConnection(GameMap otherMap, Character toChar, Character fromChar) {
         connections.add(new ConnectionInfo(toChar, fromChar, otherMap.id));
+        return this;
+    }
+
+    public MapBuilder withSpellbook(DamageTypes element) {
+        spellBook = ef.createSpellbook(element);
+        return this;
+    }
+
+    public MapBuilder withMacGuffin() {
+        mcg = ef.createMacGuffin();
         return this;
     }
 
@@ -196,6 +211,16 @@ public class MapBuilder {
             other.connect(to, from, freshMap.id);
             other.setTile(to, ci.toChar);
         });
+
+        if (spellBook != null) {
+            ef.seed(spellBook, freshMap);
+            state.addEntities(spellBook);
+        }
+
+        if (mcg != null) {
+            ef.seed(mcg, freshMap);
+            state.addEntities(mcg);
+        }
 
         return freshMap;
     }

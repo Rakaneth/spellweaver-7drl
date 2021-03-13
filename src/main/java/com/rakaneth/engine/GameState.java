@@ -2,6 +2,8 @@ package com.rakaneth.engine;
 
 import com.rakaneth.entity.*;
 import com.rakaneth.map.GameMap;
+import com.rakaneth.view.LoseView;
+import com.rakaneth.view.UIStack;
 import squidpony.squidmath.Coord;
 import squidpony.squidmath.GWTRNG;
 import squidpony.squidmath.IRNG;

@@ -1,13 +1,11 @@
 package com.rakaneth.engine.action;
 
 import com.rakaneth.engine.GameState;
-import com.rakaneth.entity.Actor;
-import com.rakaneth.entity.Combatant;
-import com.rakaneth.entity.Entity;
-import com.rakaneth.entity.Player;
+import com.rakaneth.entity.*;
 import squidpony.squidmath.Coord;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class MoveAction extends GameAction {
     private final Coord to;
@@ -32,6 +30,18 @@ public class MoveAction extends GameAction {
             }
         }
         actor.moveTo(to);
+        if (actor instanceof Player) {
+            final var pickups = state.getEntitiesAt(to)
+                    .stream()
+                    .filter(e -> e instanceof PickupItem)
+                    .map(e -> (PickupItem)e)
+                    .collect(Collectors.toList());
+
+            for (PickupItem p : pickups) {
+                p.onPickup((Combatant)actor, state);
+                state.removeEntities(p);
+            }
+        }
         cost = (int)(state.getCurMap().getCost(to) * 10);
         return Optional.empty();
     }

@@ -1,6 +1,7 @@
 package com.rakaneth.entity;
 
 import com.rakaneth.engine.DamageTypes;
+import com.rakaneth.map.GameMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import squidpony.squidmath.IRNG;
@@ -93,5 +94,18 @@ public final class EntityFactory {
 
     public Combatant randomMonster(int level) {
         return monsterFromBP(getRandomCreatureBP(level));
+    }
+
+    public Spellbook createSpellbook(DamageTypes element) {
+        return new Spellbook(element);
+    }
+
+    public void seed(Entity entity, GameMap gmap) {
+        entity.setMapId(gmap.getId());
+        entity.moveTo(gmap.getRandomFloor());
+    }
+
+    public MacGuffin createMacGuffin() {
+        return new MacGuffin();
     }
 }

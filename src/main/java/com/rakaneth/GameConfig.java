@@ -1,5 +1,6 @@
 package com.rakaneth;
 
+import com.rakaneth.engine.DamageTypes;
 import com.rakaneth.engine.DiceRoller;
 import com.rakaneth.engine.GameState;
 import com.rakaneth.engine.MessageDispatcher;
@@ -41,7 +42,7 @@ public final class GameConfig {
     }
 
     public static GameState newGame() {
-        final var state = new GameState(0xDEADBEEF, 0xDEADBEEF);
+        final var state = new GameState();
         MessageDispatcher.create(state);
         DiceRoller.create(state.gameRNG);
         final var firstFloor = new MapBuilder(50, 50, state)
@@ -63,6 +64,7 @@ public final class GameConfig {
                 .withLighting(true)
                 .withCreaturesOfLevel(1)
                 .withMaxCreatures(25)
+                .withSpellbook(DamageTypes.FORCE)
                 .build();
 
         final var thirdFloor = new MapBuilder(75, 50, state)
@@ -72,6 +74,7 @@ public final class GameConfig {
                 .withName("Caverns")
                 .withCreaturesOfLevel(1)
                 .withMaxCreatures(30)
+                .withSpellbook(DamageTypes.LIGHT)
                 .build();
 
         final var fourthFloor = new MapBuilder(75, 75, state)
@@ -81,6 +84,7 @@ public final class GameConfig {
                 .withName("Deep Caverns")
                 .withCreaturesOfLevel(2)
                 .withMaxCreatures(35)
+                .withSpellbook(DamageTypes.DARK)
                 .build();
 
         final var fifthFloor = new MapBuilder(100, 100, state)
@@ -92,6 +96,7 @@ public final class GameConfig {
                 .withCreaturesOfLevel(2)
                 .withMaxCreatures(40)
                 .withCreature("greaterShadow")
+                .withMacGuffin()
                 .build();
 
         state.addMaps(firstFloor, secondFloor, thirdFloor, fourthFloor, fifthFloor);

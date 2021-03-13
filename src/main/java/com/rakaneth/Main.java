@@ -1,6 +1,7 @@
 package com.rakaneth;
 
 import com.rakaneth.view.KeyPressedListener;
+import com.rakaneth.view.LoseView;
 import com.rakaneth.view.PlayView;
 import com.rakaneth.view.UIStack;
 import com.valkryst.VTerminal.component.VPanel;
@@ -38,6 +39,11 @@ public class Main {
                 boolean update = stack.handle(e);
                 if (update) state.update();
                 stack.render(panel);
+                if (!state.player.isAlive()) {
+                    stack.pop();
+                    stack.push(new LoseView(state));
+                    stack.render(panel);
+                }
             });
         });
 

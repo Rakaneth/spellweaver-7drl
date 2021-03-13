@@ -2,17 +2,31 @@ package com.rakaneth.view;
 
 import com.valkryst.VTerminal.component.VPanel;
 
+import java.awt.*;
+
 public final class UIUtils {
     //naive writeString implementation
     public static void writeString(int x, int y, String s, VPanel panel) {
         for (int i = 0; i < s.length(); i++) {
-            panel.setCodePointAt(x, y, s.codePointAt(i));
+            panel.setCodePointAt(x+i, y, s.codePointAt(i));
+            panel.setForegroundAt(x+i, y, Color.WHITE);
+            panel.setBackgroundAt(x+i, y, Color.BLACK);
         }
     }
 
-     public static String displayBoundedStat(int min, int max) {
+    public static void writeCenter(int width, int y, String s, VPanel panel) {
+        final int x = (width - s.length()) / 2;
+        writeString(x, y, s, panel);
+    }
+
+    public static void writeCenter(int y, String s, VPanel panel) {
+        writeCenter(panel.getWidthInTiles(), y, s, panel);
+    }
+
+    public static String displayBoundedStat(int min, int max) {
         return String.format("%d/%d", min, max);
      }
+
 
     public static class Console {
         public final int width;
