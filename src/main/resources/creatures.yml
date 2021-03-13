@@ -125,7 +125,7 @@ table:
     weakness: LIGHT
   player:
     color: 94,0,94
-    desc: The player
+    desc: Spellweaver's Apprentice
     hp: 30
     damType: PHYSICAL
     atk: 1

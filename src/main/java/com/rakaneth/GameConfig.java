@@ -5,6 +5,7 @@ import com.rakaneth.engine.GameState;
 import com.rakaneth.engine.MessageDispatcher;
 import com.rakaneth.engine.effect.Buff;
 import com.rakaneth.engine.effect.Poison;
+import com.rakaneth.map.GameMap;
 import com.rakaneth.map.MapBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,25 +31,79 @@ public final class GameConfig {
     public final static String saveFile = System.getProperty("user.home")
             + File.separatorChar + "Spellweaver" + File.separatorChar + "game.sav";
 
+    private static void connect(GameMap fromMap, GameMap toMap, Character from, Character to) {
+        final Coord fromC = fromMap.getRandomFloor();
+        final Coord toC = toMap.getRandomFloor();
+        fromMap.connect(fromC, toC, toMap.getId());
+        fromMap.setTile(fromC, from);
+        toMap.setTile(toC, to);
+        toMap.connect(toC, fromC, fromMap.getId());
+    }
+
     public static GameState newGame() {
         final var state = new GameState(0xDEADBEEF, 0xDEADBEEF);
         MessageDispatcher.create(state);
         DiceRoller.create(state.gameRNG);
-        final var gmap = new MapBuilder(75, 50, state.mapRNG, state.entityFactory, state)
-                .withCarvers(0, 2, 1)
-                .withWaterPct(5)
-                .withDoorPct(15)
+        final var firstFloor = new MapBuilder(50, 50, state)
+                .withCarvers(0, 1, 1)
+                .withDoorPct(85)
                 .withDoubleDoors(true)
-                .withId("test")
-                .withName("Test")
-                .withCreaturesOfLevel(2)
+                .withId("floor1")
+                .withName("Cellar")
+                .withLighting(true)
+                .withCreaturesOfLevel(0)
                 .withMaxCreatures(20)
+                .build();
+
+        final var secondFloor = new MapBuilder(50, 50, state)
+                .withCarvers(1, 1, 0)
+                .withDoorPct(35)
+                .withId("floor2")
+                .withName("Second Basement")
+                .withLighting(true)
+                .withCreaturesOfLevel(1)
+                .withMaxCreatures(25)
+                .build();
+
+        final var thirdFloor = new MapBuilder(75, 50, state)
+                .withCarvers(1, 0, 0)
+                .withWaterPct(15)
+                .withId("floor3")
+                .withName("Caverns")
+                .withCreaturesOfLevel(1)
+                .withMaxCreatures(30)
+                .build();
+
+        final var fourthFloor = new MapBuilder(75, 75, state)
+                .withCarvers(2, 0, 0)
+                .withWaterPct(30)
+                .withId("floor4")
+                .withName("Deep Caverns")
+                .withCreaturesOfLevel(2)
+                .withMaxCreatures(35)
+                .build();
+
+        final var fifthFloor = new MapBuilder(100, 100, state)
+                .withCarvers(1, 2, 2)
+                .withWaterPct(40)
+                .withDoorPct(50)
+                .withId("floor5")
+                .withName("Catacombs")
+                .withCreaturesOfLevel(2)
+                .withMaxCreatures(40)
                 .withCreature("greaterShadow")
                 .build();
-        state.addMaps(gmap);
+
+        state.addMaps(firstFloor, secondFloor, thirdFloor, fourthFloor, fifthFloor);
+
+        connect(firstFloor, secondFloor, '>', '<');
+        connect(secondFloor, thirdFloor, '>', '<');
+        connect(thirdFloor, fourthFloor, '>', '<');
+        connect(fourthFloor, fifthFloor, '>', '<');
+
         final var player = state.player;
-        player.setMapId("test");
-        state.setCurMap("test");
+        player.setMapId("floor1");
+        state.setCurMap("floor1");
         final var curMap = state.getCurMap();
         final var vw = curMap.getWidth();
         final var vh = curMap.getHeight();

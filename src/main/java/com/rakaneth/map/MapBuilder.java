@@ -10,10 +10,12 @@ import squidpony.squidgrid.Measurement;
 import squidpony.squidgrid.mapping.DungeonGenerator;
 import squidpony.squidgrid.mapping.DungeonUtility;
 import squidpony.squidgrid.mapping.SerpentMapGenerator;
+import squidpony.squidmath.Coord;
 import squidpony.squidmath.GreasedRegion;
 import squidpony.squidmath.IRNG;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,20 +33,31 @@ public class MapBuilder {
     private int doorPct = 0;
     private boolean doubleDoors = false;
     private int waterPct = 0;
-    private boolean upStairs = false;
-    private boolean downStairs = false;
     private int creatureLevel = 0;
     private int creatureMax = 0;
     private final EntityFactory ef;
     private final static Logger logger = LoggerFactory.getLogger(MapBuilder.class);
     private final GameState state;
     private final List<String> buildIDs = new ArrayList<>();
+    private final List<ConnectionInfo> connections = new ArrayList<>();
 
-    public MapBuilder(int width, int height, IRNG rng, EntityFactory ef, GameState state) {
-        this.rng = rng;
+    private static class ConnectionInfo {
+        public final Character toChar;
+        public final Character fromChar;
+        public final String toMapId;
+
+        public ConnectionInfo(Character toChar, Character fromChar, String toMapId) {
+            this.toChar = toChar;
+            this.fromChar = fromChar;
+            this.toMapId = toMapId;
+        }
+    }
+
+    public MapBuilder(int width, int height, GameState state) {
+        this.rng = state.mapRNG;
         spt = new SerpentMapGenerator(width, height, rng);
         dgn = new DungeonGenerator(width, height, rng);
-        this.ef = ef;
+        this.ef = state.entityFactory;
         this.state = state;
     }
 
@@ -85,12 +98,6 @@ public class MapBuilder {
         return this;
     }
 
-    public MapBuilder withStairs(boolean up, boolean down) {
-        this.upStairs = up;
-        this.downStairs = down;
-        return this;
-    }
-
     public MapBuilder withCreaturesOfLevel(int level){
         creatureLevel = level;
         return this;
@@ -103,6 +110,11 @@ public class MapBuilder {
 
     public MapBuilder withCreature(String id) {
         buildIDs.add(id);
+        return this;
+    }
+
+    public MapBuilder withConnection(GameMap otherMap, Character toChar, Character fromChar) {
+        connections.add(new ConnectionInfo(toChar, fromChar, otherMap.id));
         return this;
     }
 
@@ -175,15 +187,15 @@ public class MapBuilder {
                     pickedCreature.getPos());
         }
 
-        if (upStairs) {
-            final var upC = freshMap.getRandomFloor();
-            freshMap.setTile(upC, '<');
-        }
-
-        if (downStairs) {
-            final var downC = freshMap.getRandomFloor();
-            freshMap.setTile(downC, '>');
-        }
+        connections.forEach(ci -> {
+            final var other = state.getMap(ci.toMapId);
+            final Coord from = freshMap.getRandomFloor();
+            final Coord to = other.getRandomFloor();
+            freshMap.connect(from, to, ci.toMapId);
+            freshMap.setTile(from, ci.fromChar);
+            other.connect(to, from, freshMap.id);
+            other.setTile(to, ci.toChar);
+        });
 
         return freshMap;
     }

@@ -17,6 +17,8 @@ import java.util.Optional;
 
 public class GameMap implements Serializable {
 
+
+
     public static class Connection {
         public final Coord dest;
         public final String mapId;
@@ -171,6 +173,12 @@ public class GameMap implements Serializable {
 
     public boolean isClosedDoor(Coord c) {
         return getTile(c).orElse('\0') == '+';
+    }
+
+    public boolean isStairs(Coord pos) {
+        String stairs = "<>";
+        final var maybeTile = getTile(pos);
+        return maybeTile.isPresent() && stairs.indexOf(maybeTile.get()) > -1;
     }
 
 }

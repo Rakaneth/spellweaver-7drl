@@ -1,6 +1,7 @@
 package com.rakaneth.interfaces;
 
 import com.rakaneth.engine.DamageTypes;
+import com.rakaneth.engine.DiceRoller;
 import com.rakaneth.engine.Spell;
 import com.rakaneth.engine.effect.ApplyDamageSpell;
 import squidpony.squidai.PointAOE;
@@ -37,7 +38,8 @@ public interface Caster {
                 spell.setBaseElement(element);
                 spell.charge(false);
                 spell.addElement(element);
-                spell.badEffects.add(new ApplyDamageSpell());
+                int variance = DiceRoller.getInstance().rng.between(-3, 4);
+                spell.badEffects.add(new ApplyDamageSpell(variance));
             }
             case FIRST_MOD -> {
                 element.modifySecondCast(spell);

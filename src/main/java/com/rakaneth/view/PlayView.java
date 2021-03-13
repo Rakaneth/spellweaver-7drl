@@ -55,8 +55,11 @@ public class PlayView extends GameView {
         renderStats(panel);
         renderInfo(panel);
         if (curMode == DrawMode.TARGETING) {
-            if (target == null) target = gameState.player.getPos();
-            gameState.player.getSpell().setTarget(target);
+            final var pos = gameState.player.getPos();
+            if (target == null) target = pos;
+            final var spell = gameState.player.getSpell();
+            spell.setTarget(target);
+            spell.setOrigin(pos);
             final var aoe = gameState.player.getSpell().cast().aoe;
             renderTargeting(panel, aoe);
         }
@@ -118,9 +121,47 @@ public class PlayView extends GameView {
                 case KeyEvent.VK_2 -> new CastAction(player, player.getKnownElement(1));
                 case KeyEvent.VK_3 -> new CastAction(player, player.getKnownElement(2));
                 case KeyEvent.VK_4 -> new CastAction(player, player.getKnownElement(3));
+                case KeyEvent.VK_5 -> {
+                    if (player.getKnownElements().size() >= 5)
+                        yield new CastAction(player, player.getKnownElement(4));
+                    else {
+                        update = false;
+                        yield new NoAction(player);
+                    }
+                }
+                case KeyEvent.VK_6 -> {
+                    if (player.getKnownElements().size() >= 6)
+                        yield new CastAction(player, player.getKnownElement(5));
+                    else {
+                        update = false;
+                        yield new NoAction(player);
+                    }
+                }
+                case KeyEvent.VK_7 -> {
+                    if (player.getKnownElements().size() >= 7)
+                        yield new CastAction(player, player.getKnownElement(6));
+                    else {
+                        update = false;
+                        yield new NoAction(player);
+                    }
+                }
                 case KeyEvent.VK_ENTER -> {
                     curMode = DrawMode.TARGETING;
+                    target = player.getPos();
                     update = false;
+                    yield new NoAction(player);
+                }
+                case KeyEvent.VK_PERIOD, KeyEvent.VK_COMMA -> {
+                    if (key.isShiftDown()) {
+                        if (gameState.getCurMap().isStairs(player.getPos())) {
+                            gameState.addMessage(player.name + " takes the stairs.");
+                            yield new TakeStairsAction(player);
+                        } else {
+                            gameState.addMessage("No stairs here.");
+                            update = false;
+                            yield new NoAction(player);
+                        }
+                    }
                     yield new NoAction(player);
                 }
                 default -> {
@@ -188,7 +229,7 @@ public class PlayView extends GameView {
                         final var screenPoint = curMap.mapToScreen(curPoint, centerPoint, MAP_SCREEN);
                         Color bg = Color.BLACK;
                         Color fg = Color.WHITE;
-                        if (gameState.player.isVisible(curPoint.x, curPoint.y)) {
+                        if (curMap.isLit() || gameState.player.isVisible(curPoint.x, curPoint.y)) {
                             bg = colorTiles.getOrDefault(tile, Color.BLACK);
                         } else if (curMap.isExplored(curPoint)) {
                             bg = EXPLORED_BG;
@@ -282,7 +323,7 @@ public class PlayView extends GameView {
                 .collect(Collectors.toList());
 
         for (Entity e : toDraw) {
-            if (inView(e.getPos()) && gameState.player.canSee(e)) {
+            if (inView(e.getPos()) && (m.isLit() || gameState.player.canSee(e))) {
                 final Color color = e.color == Color.BLACK ? FLOOR_BG : e.color;
                 drawCharAdjusted(panel, e.getPos(), e.glyph, Color.WHITE, color);
             }
@@ -306,7 +347,9 @@ public class PlayView extends GameView {
         final var toDraw = aoe.findArea();
 
         toDraw.keySet().forEach(c -> {
-            drawCharAdjusted(panel, c, 'X', Color.CYAN, Color.BLACK);
+            if (gameState.player.isVisible(c.x, c.y)) {
+                drawCharAdjusted(panel, c, 'X', Color.CYAN, Color.BLACK);
+            }
         });
         drawCharAdjusted(panel, target, 'X', Color.YELLOW, Color.BLACK);
     }

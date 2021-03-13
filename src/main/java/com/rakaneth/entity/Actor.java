@@ -50,6 +50,7 @@ public class Actor extends Entity implements Vision {
         this.vision = vision;
     }
 
+
     public void setCurrentAction(GameAction action) { this.currentAction = action; }
 
     public void setNrg(int nrg) { this.nrg = nrg; }

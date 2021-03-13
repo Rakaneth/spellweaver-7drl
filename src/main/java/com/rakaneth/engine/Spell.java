@@ -75,6 +75,7 @@ public class Spell implements Serializable {
     //Mutators
     public void setOrigin(Coord origin) {
         this.origin = origin;
+        this.tech.aoe.setOrigin(origin);
     }
 
     public void setTarget(Coord target) {

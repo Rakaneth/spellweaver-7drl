@@ -155,4 +155,8 @@ public class GameState implements Serializable {
 
         removeEntities(toRemove);
     }
+
+    public GameMap getMap(String toMapId) {
+        return maps.get(toMapId);
+    }
 }

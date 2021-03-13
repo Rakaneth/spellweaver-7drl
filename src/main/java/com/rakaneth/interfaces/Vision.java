@@ -10,8 +10,16 @@ import squidpony.squidmath.Coord;
 public interface Vision {
     double[][] getVisibleTiles();
     double getVision();
+    void setVisible(double[][] visiTiles);
 
     default void updateFOV(GameMap gmap, Coord c) {
+        final int vw = getVisibleTiles().length;
+        final int vh = getVisibleTiles()[0].length;
+        final int mw = gmap.getWidth();
+        final int mh = gmap.getHeight();
+        if (mw != vw || vh != mh) {
+            setVisible(new double[mw][mh]);
+        }
         FOV.reuseFOV(gmap.getResistances(), getVisibleTiles(), c.x, c.y, getVision(), Radius.DIAMOND);
         if (this instanceof Player) {
             gmap.updateExplored(getVisibleTiles());

@@ -77,7 +77,7 @@ public enum DamageTypes {
             spell.setAOE(new LineAOE(
                             spell.getOrigin(),
                             spell.getTarget(),
-                            spell.getPotency(),
+                            spell.getPotency() / 3,
                             Radius.DIAMOND, 1, spell.getPotency()));
         }
 

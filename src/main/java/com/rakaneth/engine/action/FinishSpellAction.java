@@ -21,6 +21,7 @@ public class FinishSpellAction extends GameAction {
         final Caster caster = (Caster)actor;
         final Spell spell = caster.getSpell();
         final var user = (Combatant)actor;
+        spell.setOrigin(user.getPos());
         final var hits = spell.cast().apply(user.getPos(), spell.getTarget());
         hits.forEach((c, v) -> {
             if (v <= 0.0) return;

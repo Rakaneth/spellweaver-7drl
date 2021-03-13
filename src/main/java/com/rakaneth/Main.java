@@ -34,16 +34,11 @@ public class Main {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.addKeyListener((KeyPressedListener) e -> {
-            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                GameConfig.saveGame(state);
-                System.exit(0);
-            } else {
-                SwingUtilities.invokeLater(() -> {
-                    boolean update = stack.handle(e);
-                    if (update) state.update();
-                    stack.render(panel);
-                });
-            }
+            SwingUtilities.invokeLater(() -> {
+                boolean update = stack.handle(e);
+                if (update) state.update();
+                stack.render(panel);
+            });
         });
 
         stack.push(new PlayView(state));

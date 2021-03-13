@@ -3,8 +3,8 @@ plugins {
     id 'application'
 }
 
-group 'org.example'
-version '0.22-SNAPSHOT'
+group 'com.rakaneth'
+version '0.23-PREVIEW'
 
 repositories {
     mavenCentral()
