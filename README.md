@@ -1,9 +1,11 @@
 # Spellweaver #
 This is my 2021 7DRL entry. This is a classic roguelike with ASCII graphics.
+This is the 7DRL version of the game, so bugs certainly abound. 
 
 ## Libraries ##
-This uses VTerminal, a Swing ASCII console frontend, and SquidLib, which
-provides various utilities suited for roguelikes.
+* [VTerminal](https://github.com/Valkryst/VTerminal) - graphics
+* [SquidLib](httpsL//github.com/yellowstonegames/SquidLib) - roguelike utilities
+* [snakeyaml](https://bitbucket.org/asomov/snakeyaml/src/master/) - YAML parsing
 
 ## Game Premise ##
 You are an apprentice sorcerer sent into a musty dungeon to retrieve your
@@ -25,7 +27,36 @@ The resultant executable JAR file will be in
 Jars will also be available under this repo's Releases.
 
 ## How to Play ##
-Coming Soon!
+The game is turn-based, as is standard. The world only moves when you do.
+
+### Symbols ###
+* `#` - a solid wall
+* `.` - empty floor
+* `@` - you
+* any letter - a monster
+* `>` - stairs down
+* `<` - stairs up
+* `X` - targeting UI assistance
+* `,` - shallow water(150% time to move through)
+* `~` - deep water (triple time to move through)
+
+### Controls ###
+* `W, A, S, D` - movement (up, left, down, right respectively)
+* `1-7` - prepare a spell with up to three elements
+* `>, <` - descend or ascend stairs (either works for any stairway)
+* `ENTER` - enter targeting mode (after preparing a spell)
+
+### Gameplay Notes ###
+There are seven elements: `FIRE, ICE, LIGHTNING, EARTH, FORCE, LIGHT, DARK`. You begin play knowing
+how to weave `FIRE, ICE, LIGHTNING,` and `EARTH`. You may find the others as lost spellbooks in the
+dungeon.
+
+The first element of any spell dictates the base element of the spell. The second element changes
+the spell in different ways, applying an effect to the targets or perhaps a helpful enchantment to
+yourself. The third element changes the shape of the spell from a simple point to a variety of shapes,
+again depending on element.
+
+Some creatures are vulnerable to certain (primary) elements and resistant to others.
 
 ## DevLog ##
 
@@ -37,7 +68,7 @@ I come to my first major design decision - while it is easier to ask the
 maps to hold the state of Entities (which is what I have now), I think I would
 rather store them in the `GameState` class for easier serialization. I'm
 going to sleep on that decision for now. Also, I need to try to build a
-JAR now so I can release dev builds to my testers who have graciously
+JAR now so that I can release dev builds to my testers who have graciously
 volunteered to test for me.
 
 Moved `Entity` storage to the `GameState`. Ideally, I should only need to
